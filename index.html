@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#120709">
+<title>Porkies · Puzzl</title>
+<meta name="description" content="Four suspects, four stories, one liar. Spot the Fibber in a new daily deduction puzzle from Puzzl.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Puzzl">
+<meta property="og:title" content="Porkies · Someone's telling porkies">
+<meta property="og:description" content="Four suspects, four stories, one liar. Spot the Fibber in a new daily deduction puzzle from Puzzl.">
+<meta property="og:url" content="https://lukeb1991.github.io/Porkies/">
+<meta property="og:image" content="https://lukeb1991.github.io/Porkies/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lukeb1991.github.io/Porkies/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥧%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#120709;--panel:#200c11;--panel2:#2e1219;--line:rgba(255,168,180,.16);--line2:rgba(255,168,180,.38);
+  --muted:#c79aa3;--ice:#ffdde2;--text:#fff4f5;--body:#efd5d9;
+  --gold:#f5c26b;--blood:#ff4d6d;--faith:#7cc4ff;--good:#5fd39b;
+  --purple:#e11d48;--pink:#ff4f8b;--grad:linear-gradient(90deg,var(--purple),var(--pink));
+  --serif:'DM Serif Display',Georgia,serif;--mono:'DM Mono',ui-monospace,monospace;--sans:'DM Sans',system-ui,sans-serif;
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+}
+/* Puzzl is a dark brand: same palette whatever the viewer's theme */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#120709;--text:#fff4f5}}
+:root[data-theme="dark"]{--ink:#120709;--text:#fff4f5}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;font-family:var(--sans);color:var(--text);-webkit-font-smoothing:antialiased;background-color:var(--ink);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='80' fill='none' stroke='%23ff9aa8' stroke-opacity='.06' stroke-width='1.2'%3E%3Cpath d='M28 0L56 40L28 80L0 40Z'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 90% 38% at 50% -6%,rgba(225,29,72,.28),transparent 62%) fixed,
+    radial-gradient(ellipse 70% 30% at 50% 108%,rgba(245,194,107,.07),transparent 70%) fixed,var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation;text-align:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+
+.wrap{max-width:500px;margin:0 auto;padding:12px 16px 0}
+.top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:44px}
+.top .r{justify-self:end;display:flex;gap:8px}
+.icon{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ice);font:500 16px var(--mono);display:grid;place-items:center;text-align:center}
+.icon svg{width:16px;height:16px}
+.kicker{font:500 12px var(--mono);letter-spacing:.3em;color:var(--ice);text-transform:uppercase;white-space:nowrap}
+h1{font:400 52px/1 var(--serif);text-align:center;margin-top:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font:italic 400 21px var(--serif);color:var(--ice);text-align:center;margin-top:2px}
+
+/* The case */
+.case{margin-top:18px;border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;
+  background:radial-gradient(ellipse 90% 70% at 100% 0%,rgba(236,72,153,.1),transparent 70%),var(--panel);animation:in .45s ease both}
+.case-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ice);border:1px solid var(--line2);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.chip.lv1{color:var(--good);border-color:rgba(95,211,155,.45)}.chip.lv2{color:var(--gold);border-color:rgba(245,194,107,.45)}.chip.lv3{color:#ff8fa3;border-color:rgba(255,77,109,.5)}
+.clock{font:500 13px var(--mono);color:var(--muted);display:flex;align-items:center;gap:6px}
+.clock svg{width:14px;height:14px}
+.case h2{font:400 26px/1.15 var(--serif);margin-top:12px}
+.case p{font:400 16px/1.5 var(--sans);color:var(--body);margin-top:6px}
+
+.label{font:500 11px var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:20px 2px 8px;display:flex;align-items:center;gap:10px}
+.label::after{content:"";flex:1;height:1px;background:var(--line)}
+.evidence{list-style:none;display:grid;gap:8px;counter-reset:ev}
+.evidence li{counter-increment:ev;position:relative;padding:11px 14px 11px 46px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid var(--line);font:400 15px/1.45 var(--sans);color:var(--body);animation:in .45s ease both}
+.evidence li::before{content:counter(ev);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);font:500 12px/21px var(--mono);text-align:center}
+.evidence li.lit{border-color:rgba(245,194,107,.6);box-shadow:0 0 0 1px rgba(245,194,107,.25),0 0 18px rgba(245,194,107,.12)}
+
+.hints{display:grid;gap:8px}
+.hints:empty{display:none}
+.hintcard{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(245,194,107,.35);background:linear-gradient(90deg,rgba(245,194,107,.09),transparent 70%),var(--panel);border-radius:12px;padding:10px 14px;font:400 15px/1.45 var(--sans);color:var(--body);animation:in .4s ease both}
+.hintcard b{font:500 11px/21px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+
+/* Suspects */
+.note{font:400 14px/1.45 var(--sans);color:var(--muted);margin:-2px 2px 10px}
+.suspects{display:grid;gap:10px}
+.sus{position:relative;display:grid;grid-template-columns:50px 1fr;column-gap:12px;row-gap:8px;width:100%;padding:14px;border-radius:14px;
+  border:1.5px solid var(--line);background:var(--panel);transition:border-color .15s,background .15s,transform .15s,box-shadow .15s;animation:in .45s ease both;overflow:hidden}
+.sus:active:not(:disabled){transform:scale(.985)}
+@media (hover:hover){.sus:hover:not(:disabled):not(.on){border-color:var(--line2)}}
+.sus.on{border-color:var(--pink);background:linear-gradient(180deg,rgba(255,79,139,.13),rgba(225,29,72,.06)),var(--panel);box-shadow:0 0 0 1px var(--pink),0 6px 24px rgba(255,79,139,.2)}
+.sus:disabled{cursor:default}
+.seal{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font:400 24px var(--serif);color:#1a1230;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),transparent 45%),var(--sc);
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.18),inset 0 0 0 6px rgba(255,255,255,.12);transition:transform .2s}
+.sus.on .seal{transform:scale(1.06) rotate(-6deg)}
+.who{align-self:center;min-width:0}
+.who b{display:block;font:400 22px/1.1 var(--serif)}
+.who small{display:block;font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.q{grid-column:1 / -1;font:400 16px/1.5 var(--sans);color:var(--body);padding-left:12px;border-left:2px solid var(--line2)}
+.sus.on .q{border-left-color:var(--pink)}
+.badge{position:absolute;top:14px;right:14px;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;animation:pop .45s cubic-bezier(.2,1.5,.45,1) both}
+.badge.tc{background:var(--blood);color:#fff}
+.badge.fa{background:var(--faith);color:#0f1a2c}
+.sus.fibber{border-color:var(--blood);box-shadow:0 0 0 1px var(--blood),0 0 30px rgba(255,77,109,.25)}
+.sus.fibber .seal{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.4),transparent 45%),var(--blood);color:#fff}
+.sus.fibber .q{border-left-color:var(--blood)}
+.sus.innocent{border-color:rgba(124,196,255,.6)}
+.sus.innocent .seal{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),transparent 45%),var(--faith)}
+.sus.dim>*{opacity:.5}
+/* The moment of truth */
+.sus .veil{position:absolute;inset:0;display:grid;place-items:center;background:rgba(12,4,6,.88);font:italic 400 26px var(--serif);color:var(--ice);opacity:0;pointer-events:none;transition:opacity .25s}
+.sus.judging .veil{opacity:1}
+.veil i{font-style:normal;display:inline-block;animation:blink 1.2s infinite both}
+.veil i:nth-child(2){animation-delay:.2s}.veil i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.15}50%{opacity:1}}
+.sus.shake{animation:shake .45s ease both}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* The vote bar */
+.act{position:sticky;bottom:0;z-index:5;margin:14px -16px 0;padding:16px 16px calc(14px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(180deg,rgba(18,7,9,0),rgba(18,7,9,.94) 26%,var(--ink))}
+.act-row{display:flex;gap:8px}
+.btn{height:52px;border-radius:14px;padding:0 20px;font:700 15px var(--sans);color:#fff;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;cursor:default;transform:none}
+.btn.ghost{background:transparent;border:1.5px solid var(--line2);color:var(--ice)}
+.btn.wide{width:100%}
+.btn.main{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn.main.ready{animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 rgba(236,72,153,0)}50%{box-shadow:0 0 22px rgba(236,72,153,.5)}}
+.hintbtn{flex:none;height:52px;border-radius:14px;padding:0 14px;border:1.5px solid rgba(245,194,107,.45);color:var(--gold);display:flex;align-items:center;gap:8px;font:700 14px var(--sans);background:linear-gradient(rgba(245,194,107,.07),rgba(245,194,107,.07)),var(--ink)}
+.hintbtn:disabled{opacity:.45;cursor:default}
+.mags{display:inline-flex;gap:3px;align-items:center}
+.mag{width:20px;height:20px;overflow:visible;transition:opacity .3s,transform .3s}
+.mag .glint{animation:glint 2.6s ease-in-out infinite}
+.mag:nth-child(2) .glint{animation-delay:.5s}.mag:nth-child(3) .glint{animation-delay:1s}
+@keyframes glint{0%,100%{opacity:.25}50%{opacity:1}}
+.mag.used{opacity:.5;transform:rotate(-20deg) scale(.88)}
+.mag.used .glint{display:none}
+.vote-note{text-align:center;font:500 12px var(--mono);letter-spacing:.06em;color:var(--muted);margin-top:8px}
+
+/* End of the day */
+.result{position:relative;margin-top:18px;text-align:center;border:1px solid var(--line);border-radius:14px;padding:24px 18px 22px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(236,72,153,.14),transparent 70%),var(--panel);animation:in .5s ease both}
+.stamp{display:inline-block;font:500 20px var(--mono);letter-spacing:.16em;text-transform:uppercase;padding:6px 14px 6px 17px;border:3px solid currentColor;border-radius:8px;
+  box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 5px currentColor;color:var(--good);transform:rotate(-6deg);animation:thump .5s cubic-bezier(.2,1.5,.45,1) .15s both}
+.stamp.fail{color:var(--blood)}
+@keyframes thump{from{opacity:0;transform:rotate(-6deg) scale(2.2)}to{opacity:1;transform:rotate(-6deg) scale(1)}}
+@keyframes pop{from{opacity:0;transform:scale(1.8)}to{opacity:1;transform:scale(1)}}
+.verdict{font:400 34px/1.1 var(--serif);margin-top:16px}
+.line{font:400 16px/1.5 var(--sans);color:var(--body);margin-top:6px}
+.line b{color:var(--text);font-weight:700}
+.why{margin:16px 0 0;text-align:left;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line);padding:12px 14px;font:400 15px/1.5 var(--sans);color:var(--body)}
+.why b{display:block;font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.tally{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:16px;font:500 13px var(--mono);color:var(--ice)}
+.tally .mags .mag{width:28px;height:28px}
+.streak{font:500 13px var(--mono);color:var(--ice);letter-spacing:.04em;margin-top:12px}
+.btns{display:flex;gap:8px;margin-top:18px}.btns .btn{flex:1;padding:0 12px}
+.next{font:500 13px var(--mono);color:var(--muted);margin-top:16px}
+.next b{color:var(--ice);font-weight:500}
+
+footer{text-align:center;font:400 12px var(--mono);color:var(--muted);padding:26px 0 calc(28px + env(safe-area-inset-bottom,0px))}
+footer b{color:#fff;font-weight:500}
+
+/* Modals */
+.modal{position:fixed;inset:0;background:rgba(10,3,5,.84);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:420px;max-height:calc(100% - 20px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;position:relative;animation:in .3s ease both}
+.sheet h2{font:400 30px var(--serif);margin-bottom:12px}
+.sheet p{font:400 15px/1.55 var(--sans);color:var(--body);margin-bottom:10px}
+.sheet p b{color:var(--text)}
+.close{position:absolute;top:12px;right:12px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 14px}
+.roles div{border-radius:10px;padding:10px;text-align:center;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.roles .f{border:1px solid rgba(124,196,255,.5);color:var(--faith)}
+.roles .t{border:1px solid rgba(255,77,109,.55);color:#ff8fa3}
+.roles span{display:block;font:400 22px var(--serif);letter-spacing:0;text-transform:none;color:var(--text);margin-bottom:2px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin:8px 0 16px}
+.stats b{display:block;font:400 30px var(--serif)}
+.stats span{font:500 10px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.statlab{font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font:500 13px var(--mono)}
+.bar span{width:12px}
+.bar i{display:block;height:20px;min-width:24px;border-radius:4px;background:var(--panel2);font-style:normal;text-align:right;padding-right:7px;line-height:20px}
+.bar i.hl{background:var(--grad)}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);background:var(--text);color:var(--ink);font:700 14px var(--sans);padding:10px 18px;border-radius:999px;opacity:0;transition:.25s;pointer-events:none;z-index:30}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.og{padding:20px;text-align:center}.og canvas{width:100%;max-width:1200px}
+
+/* Case maker (?make) */
+.maker h2{font:400 30px var(--serif);margin:18px 0 6px}
+.maker p{font:400 15px/1.55 var(--sans);color:var(--body);margin-bottom:12px}
+.mk-group{border-left:4px solid var(--gc,var(--ice));background:var(--panel);border-radius:10px;padding:12px;margin-bottom:10px;display:grid;gap:6px}
+.mk-group label{display:block;font:500 12px var(--sans);color:var(--muted)}
+.mk-group .rad{display:flex;align-items:center;gap:8px;font:500 13px var(--sans);color:var(--ice)}
+.mk-group .rad input{width:auto}
+.maker input,.maker select,.maker textarea{width:100%;background:var(--ink);border:1px solid var(--line2);border-radius:8px;color:var(--text);font:500 15px var(--sans);padding:9px 10px}
+.maker textarea{font:400 14px/1.4 var(--sans);height:64px;resize:vertical}
+.maker textarea.out{font:400 12px var(--mono);height:90px}
+.mk-row{display:flex;gap:8px;margin:10px 0}.mk-row .btn{flex:1}
+.mk-note{font:500 13px var(--sans);min-height:20px;margin:6px 0}
+.mk-note.bad{color:#ff9aa8}.mk-note.warn{color:var(--gold)}.mk-note.good{color:var(--good)}
+
+@media (max-width:360px){h1{font-size:46px}.kicker{font-size:11px;letter-spacing:.16em}.hintbtn .lbl{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app">
+  <div class="top">
+    <button class="icon" id="helpBtn" aria-label="How to play">?</button>
+    <span class="kicker" id="kicker">Case No. 1</span>
+    <div class="r">
+      <button class="icon" id="soundBtn" aria-label="Sound on" aria-pressed="true"></button>
+      <button class="icon" id="statsBtn" aria-label="Your stats"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1" y="8" width="3" height="7" rx="1"/><rect x="6.5" y="4" width="3" height="11" rx="1"/><rect x="12" y="1" width="3" height="14" rx="1"/></svg></button>
+    </div>
+  </div>
+  <h1>Porkies</h1>
+  <p class="sub">Someone's telling porkies</p>
+
+  <section class="case" id="case" aria-labelledby="caseTitle">
+    <div class="case-top"><span class="chip" id="level"></span><span class="clock" id="clock" aria-label="Time taken"></span></div>
+    <h2 id="caseTitle"></h2>
+    <p id="scene"></p>
+  </section>
+
+  <div class="label">Evidence</div>
+  <ol class="evidence" id="evidence"></ol>
+
+  <div class="label" id="hintLabel" hidden>Hints</div>
+  <div class="hints" id="hints" aria-live="polite"></div>
+
+  <div class="label">The suspects</div>
+  <p class="note" id="note">Three are Innocent. One is the Fibber, and their story doesn't add up.</p>
+  <div class="suspects" id="suspects" role="group" aria-label="Suspects"></div>
+
+  <div class="act" id="act">
+    <div class="act-row">
+      <button class="hintbtn" id="hintBtn" aria-label="Use a hint"><span class="mags" id="btnCandles"></span><span class="lbl">Hint</span></button>
+      <button class="btn main" id="voteBtn" disabled>Pick a suspect</button>
+    </div>
+    <p class="vote-note">One accusation. No second chances.</p>
+  </div>
+
+  <section class="result" id="result" hidden></section>
+  <footer>A new daily deduction puzzle from <b>Puzzl</b></footer>
+</main>
+
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="sheet">
+  <button class="icon close" data-close aria-label="Close">✕</button>
+  <h2 id="helpTitle">How to play</h2>
+  <p>Every day there's a new case with <b>four suspects</b>. Each one gives you their side of the story.</p>
+  <div class="roles"><div class="f"><span>3 Innocent</span>Telling the truth</div><div class="t"><span>1 Fibber</span>Lying</div></div>
+  <p>Read the <b>evidence</b>, then check every story against it. The Fibber's story can't be true.</p>
+  <p>Tap a suspect, then press <b>Accuse</b>. You only get <b>one accusation</b>, so be sure.</p>
+  <p>Stuck? You have <b>three magnifying glasses</b>. Each hint uses one up, and it shows on your result.</p>
+  <p>Everyone gets the same case. A new one arrives every day at 7am UK time.</p>
+  <button class="btn wide" data-close>Open the case</button>
+</div></div>
+
+<div class="modal" id="statsModal" role="dialog" aria-modal="true" aria-labelledby="statsTitle"><div class="sheet">
+  <button class="icon close" data-close aria-label="Close">✕</button>
+  <h2 id="statsTitle">Your stats</h2>
+  <div class="stats" id="statsGrid"></div>
+  <div class="statlab">Hints used when you caught them</div>
+  <div id="dist"></div>
+  <p style="margin-top:14px">Next case in <b id="statsCountdown">--:--:--</b></p>
+</div></div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= Settings ================= */
+const SITE_URL   = 'https://lukeb1991.github.io/Porkies/';  // ← your live address (share text + share image)
+const RESET_HOUR = 7;                                       // ← new case each day at this hour, UK time
+const LAUNCH     = '2026-10-07';                            // ← date of Case No. 1 (UK time)
+
+/* ================= Cases =================
+   One line per day, in order from LAUNCH. Case No. 1 is the first line.
+   Make new lines with the case maker: open this page with ?make on the end of the address.
+   Each line is scrambled so the answer isn't readable at a glance in view-source.
+   If the list runs out, it starts again from the top, so keep adding lines. */
+const PUZZLES = [
+  '9JiLyVGdhxGIzVGd15WatBSZ2xWZ3RHIscjM6kDIslGduVHIk5WdvNHI0dibklGZg0mchxWYgUGa0BCZuFGI1EjO5ACdhBychdHI0V3YgIXZ39GcgUGa0BCd1JEIuQXdvBCduV2dgMHdodWasBSZoRHIlJ3bmVmYgQ3c1pGImZ2bgQnbldHItJXYsFGIlhGdgQWahNHIhlWTiojIhJCLdJiLkVmblBHchhGIlZXYoBCZsV3bjBCdpBSZy9mZlJGIn5WaoRXZt92cgQmchVGagUmbvVWbvNlIsIiLyVGZy9GIulGItJXYsFGIlhGdgQmbhBCd1NGIyV2dvBHIlhGdgQXdQJCLi4yZulWbpRHI0V3biFGIzlGIllGbgUGaUJyW6ICaiwiM6ICeiwSXdJiLyVGdmFGI0h2ZpFmc0NHIy9GZpJncvNGI0NXZ3BSZoRHIkV2ajVGajBSSg4yNyoTOgQXYgYmZvBCduV2dg0mchxWYgUGaUJCLiIXZsRXdiBSZoRlIsISasVkIbxSXi4Cd19GI05WZ3Byc0h2ZpxGIlhGdgIXZ0FGbgQnbl12btBSYgQmbhBCLmZ2bg82Zg0mchxWYgQXZulmYhNGIlhGdgQmchVGagkkIsICdzlmbhlGcgUGaUJCLiEWaNJyWs0lIuQXdvBCduV2dgMHdodWasBSZoRHIuVGa3BibpFGduV3bmBSZoRHI5JGI0V3bgMXY3BSSiwiIyVmblRmchdGIlhGViwiIoF2bOJyWs0lIuwGbhhGIn5WaulGZgUGa0Byb0BCdodWahJHdzBCduV2dg4WZoRHIsUmbp5GI0FGI0VmbpJWYjBCc1NGIlhGdgQWZrN2bsBSSiwiI0N3boBSZoRlIsISY2FkIbtlOiAnIs0lIuknc05WYwBycnIXZsRXdiBSZoRHIulGIsVmbhBHI5RXayV3YlNHIlhGdg42bgM3dvh2cgkHbu9GIl1Wa0BSbyFGbhBSZoRlIsIiLtB3NyoTOgQXYgYmZvBCduV2dg0mchxWYgQXZulmYhNGIwV3YgUGaUJCLi4SbwVTM6kDI0FGIy9mbh1GIlx2bodHIlhGdgQXaoBCd1NGIyV2dvBHIBJyW6ISZiwSM6ICZiwiIuQXdvt2YhxmYgEGIn5WayVHZgI3buFWTg4mcvhGdrNWYsJEIt9mcmBCZlh2cp5WY2BCc1NGI39GaTBSZnFGbslmVgIXZ2xWazBSZoRlI6IyciwiIwV3QgcmbpN3cp1EIlhGViojI0Jye',
+  '=0nIuUmclhGdgQWZkJXYvJGIlZXYoBCdn4GZsV3bjBSZIBiLrJ3bZByb0Bycz9mcDBycncmbptEIt9mcmBCcvR3ct42buBycuVncgU2YpZnclNHIzlGa0BCd1JGIsg2Z19mcvJmclRXZQBCdhBibvBCdvdGIlhGIklWYzBSZpxGbPJiOiEmIs0lIuQXYgQWZwB3b0NHIyVmdl5GIulWYyRHIlhGdg42bpRXY0NHIhBCdhBCZlRmch9mYgUmbvVWbvNlIsIiLulWYnFGIlNmblRWa2VGIm9GIlNWZpBHI0NncpZGIlhGdgQWYlJlIsIiLulWYyRHIlhGdgQWZul2bqBSZu9WeyVmdlBSZyVGa3BCdhByav9GTislOigmIsEjOignIs0VXi4CdhV2cgkXbg8Gdgs2YhJGI05WZ3BSSg82cgwCd1h2cgMXY3BCdlZmZ1JGIlhGdgQXdiBSYlRHIhBicvZGI05WZ3BSSiwiIyVmbvl2cuVGUiwiIr5WYyZkIbxSXi4SehdHIlhGdgY2bgQ3cv1GIy9mZgUGb1JWa0NXZ2BSZoRHIulGIsxWYjBSYg42bgMXY3BSSiwiIuFWbvd3czVmbpNXdCJCLiU2YhJ3RisFLdJiLoNWYvNGI0VWa1FHIlhGdg4Wag42dvRGI0h2ZpFmc0NHI0F2cgQmbhBCanV3by9mYyVGdlBFI0FGIu9GI092ZgkkIsICduVGZ1R3UiwiIllGbs9kIbxSXi4ibvRmbvxEIm9GI0V3bgIXdvhGIuFGI0V3biFGIDBCajF2bjBibpByc0V2ajlGdgQWZrNWZoNGIJJCLiQmchV3ZgUGaUJCLiEGZulGTis1W6ICciwSXi4Sel5mc19magUGbvh2dgUGa0BicvZGI0VHazBychdHIyF2YgQXZmZWdiBSZoRlIsIiLrJ3bZBCZlh2YhVmcg4WahJHdgUGa0BSZy9mZlJGIn5WazNXatBCduV2dgA3b0BXYsBSZoRlIsIiLrJ3bZByb0Bycz9mcDBycncmbptEIt9mcmBCcvR3ct42buBycuVncg4WahJHdgMXaoRlIbpjIlJCLxojIkJCLi4ycz9mcDBycncmbptEIt9mcmBSbhBTMgUGa0BibvByajFmcgU2Zhd2Z1xGIlhGdg02byZGIkVmchVGcwF2cpRGIw9GdwFGbgEkI6IyciwiIoNWYvNEI0VWa1FFIlhGViojI0Jye',
+  '==Qfi4ibv9mbyVGdmFGIsxWYgQWZuVGcvBychdHIsxWa0BSZoRHIvNHIsg2chNGIklWYwBicl12b0NXdjBSeyVmdFBiLrVWZ3BCbsFGIuV2avJnYgMXY3BSZulGajFWbgQmchNGIlhGdgQXdCBiLsxWa0BSZoRHIkVmblB3bgIXZ2VmbgUGazBybzBCLkJXYjBSeiBCZpFGcgUmbvlnclZXZgQWahNHIsxWaHJiOiEmIs0lIuwGbpRHIlhGdgQWZkVWZuBSek9mYv5GIz1Wahx2YgUmbvVWbvNlIsIyPsxWa0BSZoRHIy9mZg4WYl1GIl5WaoNWYtBCZyF2Yg4WZr9mciBSYgMXZvRGI0FGaXJCLi4CZpFGcgUGbw9WZwBydvhGI0V3biFGIr5WaoRlIbpjIoJCLdBDLxwiMsMzW6IybiwSM6ICeiwSXdJiLyFmagUGa0BibpBCcpRHIhBCdmVGbgQmbhBCazF2Yg4WagQWahBHIsEWZ0BSbhVmcjBSetBCZhhGIJJCLiIXYsV3ZlJlIsIyclVGTgIXTisFLdJiLlNXdvhGIm9GI052byZGIl1WYjBiclZXZuBSSg4Cc1ByZulGazF2dgs2YhJGIlhGdgQXdvBychdHIJJCLiIXZoNXY3BCdvBlIsISZrVHTisFLdJiLkJXYjBSeiBCZpFGcgUmbvlnclZXRg4ibv9mbyVGdmFGIsxWYgU2Yu9GIsxWa0BSZoRHIuVGcvBCdn4GZpRGIJJCLiM3clJHdpF2ViwiIsxWaHJyWs0lIu42bv5mclRnZhBCbsFGIzVmbvN2cgcmbptWYiBiblh2Y0l2agUGa0BibpBychdHIJJCLiIXZud3bgUGaUJCLigGdpRWdKJyWbpjIwJCLdJiLyVGduV3bjBSZoRHIk5WaoVmYg82ZgYmZhR3cgkHbu9kIsIiLoNXYjBibpBCZpFGcgIXZt9GdzV3YgknclZXZg82cgwyalV2dgwGbhBiblt2byJGIuVWZiBychhGIl5WaoNWYtBCZyF2YgUGaUJCLi4CbslGdgUGa0BibpBSehJHdgg2chNGIlhGdgIXZk5WdgQHcltGIzF2dgQmchNGIlBXajVmcgUGaUJyW6ISZiwiM6ICZiwiIu02b0R3biNXbhJFIulGIt92bSBSYlRFIz1mchZEIrJXYQBCdhBCbslGdgUGa0BSbvJnZgQWZoNXauFmdgMXYoBSZwl2YlJHIl52bjNHIzV3btFmZgUGaUJiOiMnIsISZu92YTBCdlJ3YlNFIlhGViojI0Jye',
+  '==Qfi4iclRXY3JXZk5WdgMXY3BCZuF2cgQXYoRHIk5WYgUGZpRHIodWaoBychdHI0lGIlVmcoRHI0FEIuUWZyhGdgQXYgMHd1hGIlhGdgY2bgQnbvJnZg4WagQmbhNHIlhGdgcmbvxWYgQWZrxWY3BSZoNHIklWYzBiblxWZIJiOiEmIs0lIuIXZ0F2dyVGZuVHIzF2dgQXYoRHIlJXZodXZt92cgQWZrxWY3BSZu9WZt92UiwiI/0GczACdhBSYlNHIlhGdgMXY3BSZyVGaXJCLi4SZklGdgUGa0ByajVGaDJyW6ICaiwSM6ICeiwSXdJiLyVGdhdHIlhGdgcmbph2Y0F2dgIXZ39GdgUGa0BibpBCc1BychdHIJJCLiQmchV3ZlZWaMJCLiEmchplIbxSXi4ibv9mbyVGdmFGIsxWYgIXZwFGcgUGa0ByZulGZhVmcgQXdoBSetBibpBCdhNHIJJCLikDI0VHagY2bgIXZud3TiwiImZ2bldkIbxSXi4CdllWdxBCZuFGI5xWZ29GTg4SZlJHa0BCdhByc0VHagUGa0BiZvBCdu9mcmBibpBCZuF2cgUGa0ByZu9GbhBCdpV3YzlmQgQWZrxWY3BSSiwiIyV2asF2dgc2bEJCLi4WZsVGSisFLdJiLu92buJXZ0ZWYgwGbhBibhZHIlhGdggGdpdHIt9mcwBSZoRHIu9GIzF2dgkkIsIiclxGblNHItFWZyNGIlNWSiwiIvNmch1kIbtlOiAnIs0lIuQnbvJnZg4Wagg2YhVmYgUGa0BicvBCZulGalJGIlRWYuVWbvJHcgUGa0BSbvJnZgQWZoNWYlJHIlJGIuF2YgMHd1hGIlhGViwiIuAzM6MDIvRHIwMjOyASbvJnZgIXZ0F2dyVGZuVHIzF2dgMHd1hGIlhGdgY2bgQnbvJnZg4WagQmbhNHIlhGVg4SbwNDI0FGIzF2dgUGZpRHIodWaIJCLi4SbwRDIk5WYg0GcyAiblV2d0VmYg8GdulGIuV2avJnYgMXY3BCNxACd1hkIbpjIlJCLxojIkJCLi4ibv9mbyVGdmFGI5FGZuV3UgknbuV3cgEGIu9GIkx2b3hGd192UgQXYgQXdoBCajFWZiBSYg8GdulGIlt2byJGIl52bl12bTJiOiMnIsICNxAiLv5EI0VHSgg2YhVmQiojI0Jye',
+  '=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',
+  '==Qfi4yck5WdvNHItJXYsFGIlhGdgMXYg42bvNHIzFGI5xGbhNWa0FWbvRXdhBib39GZgQXdoNHIzRnZpxGIlhGdgQXdCBiLmZ2bgQnbldHItJXYsFGIlhGdg4WZodHIud3bkBCdmlGbgUGa0Byav9GdgUGagQWahNHIxlmchRlI6ISYiwSXi4iZm9GImxWZzRXagQWZoNGdpd3cgQWYoBCdhhGdgcmbphGdl12bzBCZlNXdgUmbvVWbvNlIsIyPtJXYsFGIlJXamBSYg4WagMHdmlGbgUGa0Byb0BycuVGcwFGagQXYodlIsIyPud3bkBCdldGIl52b5JXZ2VGIklGZgc3bIJyW6ICaiwiM6ICeiwSXdJiLzlXYzBibnl2cgUGa0BSZrlGbgMncpFGdzBSZoRHIr92b0BCbsFGIldFIuIWdsNGIlhGdg02byZGIulGI092ZgQ3c1pGI5xmbvBCZnU2ViwiIy92bsZGIkJ3MgwSe0JXYwBiblhkIsISZvxGaDJyWs0lIuYmZvBCduV2dgQXagQmbvNWZzBSZoRHIud3bkBCdodWahJHdzBCdmlGbgUGa0Byav9GdgkkIsIicv9GbmBCa0ZDIsQ3clV3RiwiIxlmchRlIbxSXi4ibpt2cgkXbgY2bgQXdvBCZlBXb1pGI5xmchVmTg4SbyFGbhBSZoRHIvRHI0hXZuBCdodWayBycn02bvJHI51kIsIicv9GbmBCZuJDIsQ3clV3RiwiIl5mb1REIzJXTisFLdJiL5F2dhBCdodWahJHdzBSZkF2ZpJnYgUmcpZGIlhGdgcmbhJHIJBiLkJ3b3N3cvJ3YgUGa0ByZul2bkBibvlGdwV2YlJHIu9GIzF2dgkkIsIiclRncvBHI0h2Zp5kIsISeyJXYCJyWbpjIwJCLdJiLtFWNxozMgknYgsmchBHIyF2YgUGa0BibpBCd19GIzF2dgUmbvlnclZXRiwiIukHbsF2YpRXYt9Gd1FGIud3bkBCd1h2cgMHdmlGbgUGa0BCLzRmb192cg0mchxWYgUGa0Biblh2ViwiIu0WY0AjOzACdhBicv9GbmBCZu92YlNHIlhGdg42bgQnbp9GcgwGbhNGIlhGdg02byZGImZ2bgQXZzBychdHItJXYsFGIlhGVislOiUmIsIjOiQmIsIiL0h2Zp5GIlhGdgY2bgUGbkRWatBSZoRHIulGIsVGdvhGI052byZWYlNHIs92bwt2YhxmQgEGI0FGItJXYsFGIlJXamBSZoRHImZ2bgQXZzBSZu9WZt92UiojIzJCLi0mchxWQgUmcpZEItF2MiojI0Jye',
+  '==Qfi4CdodWauRWatBCbpRnb1BCepNHIt9mcmBibpFmcggGdpdHIn5WayV3bwBychdHI0lEIuUmbp5GI0FGIn5Wa6F2ZyFGdzBicvZGI0h2Zp5GIyFWZsNGI5xWZ29GbgEGIzF2dgQXagQWahNHIu9GZy92RiojIhJCLdJiLkVmblBHchhGIyVmdl5GI0FGa0BCdodWauBSYgMXZilmcjNXZkBSZu9WZt92UiwiI/Umbp5GI0FGIn5WavRGI5t2cgUGa0BychdHI0FGaXJCLi4iclhGdhV2dgUGa0ByajVGaDJyW6ICaiwSM6ICeiwSXdJiLl1GIk5WaoVmYgUGdhdGIlhGdgQWZrN2bsBiblhGdgwiblZXZzBiZsFGagwGbpRHIlJXZoBib39GZgMXY3BSSiwiIyVGZs9GagQ3bsBlIsIiZsFkIbxSXi4CdodWalBiclRnZhBibpBCdvdGIlZXYoBCdn4GZsV3bjBSSg82cgwSeltGIhBCdvdGI0diblZXYoBSSiwiIyV3bih2ZpVmTiwiI5VGbylGaTJyWs0lIuQHanlmbgIXYlx2YgkHblZ3bMBiLzJXY0NHIlhGdgcmbph2Y0F2dgwSZulmbgQXYgs2chxmZgEGIoRXa3BCaj5WZiBSZoRHIu9GI0F2cgkkIsIiclRGbvhGI09GbQJCLi42bkJ3bHJyWs0lIuQWZrF2bzBSesVGd1x2bzJWYgQ3bHBiLlNWZlxmZggGdpdHIzV2b0FWbvRHI51GIyVmdvNGIvRHIuVGdgQXdvJWYg42dvRGIkVGcw9GcgkkIsIiclRGbvhGI09GbQJCLiQXYQJyWbpjIwJCLdJiLkVmYgc3byJXYtBycnsWZyVGRgknYgQWdtBSZoRHIulGIk5WdvZGIlJXZ3Byc05WayBHI092biBCazVmcGJCLi4yc5V2agUmdhhGIzJXZkx2boBCdvxGcgkHbu9EIu0Gc4ACdhBCZlt2YvxGIzlGIlRXYnBCduVWb09GbsFGIlhGViwiIuQHanlmbklWbgwWa05Wdg0Gc2ASbvJnZgkHbpZXYlhGIkVmbpFmcgQXSislOiUmIsEjOiQmIsIiL39GazBCduVWb09GbsFGIlhGdgUmcvZWZiBCdodWauBSZoRHIsQHanlmbyVmdvBCZlh2chx2cgMXY3BydvJnch1GIlpXayBHIzdyalJXZEJiOiMnIsIydvJnch1EIlpXayBFIlhGViojI0Jye',
+  '==Qfi4CM1ozNgwWa05WdgUmdpJnchBCdn4GZpRGIk5WYiBSZoRHIk5WYgADN6cDI0FGIkVGazlmbpZGIzVGajVWZwNHIlhGVg4yclh2YlVGczBSZoRHIn5WayVHZgcmbpt2Ylh2YtQmb192cgUmcldHIk5WYiBSZoRHIklWYzBicv5mbvNkI6ISYiwSXi4CdllHIlJXZoRHI0dibzF2dgQXYoRHIn5WaoRXZt92cgQmchVGagUmbvVWbvNlIsIyPwVHIuJXd0BCZuFmYgUGa0BCZpRGIuVGaXJCLi4yZulmblZXZgUGa0BiZvBSZulGbl1Wa0BSYgQGbpVnQislOigmIsEjOignIs0VXi4yclh2YlVGczBSZoRHIn5WayVHZgQnblRHIuVGajRXarBSZoRHIulGIzVGdhxGcgcmbpJXYlx2YgMXY3BSSiwiIyVmclRXYDJCLiUWaoB3bTJyWs0lIuQXagIXYlJGI0dibkxWdvNGIJBiLz92bsBSZoRHIulGIoNWZlB3cgM3JlRWayJGIlhGdgY2bgIXZoRXYmBSZoRHI05WZwNHIJJCLiUGZpJnYgUGa0BiZvBCduVXQiwiIhRmblJnQisFLdJiLkJ3b3BSYgIXYlhGI0dibkxWdvNGIJBCLn5WarNWZoNWLk5WdvNHIlJXZ3BCZuFmYgUGaUBiLzVGajVWZwNHIlhGdgg2Z19mcoRHI0h2ZpJHIyFmYgUGa0BCdhBychdHIJJCLiIXZoNXViwiIy9mbu92QisFLdJiLl1GI0FGIn5War92bsBychdHIt92byBSZoRHImxWYIBiLoNWZlB3cgkXbgcmbpZXanBychdHIJJCLi4WYtBCdzVmQiwiIqFmUis1W6ICciwSXi4SbwBTN6cDIslGduVHIlZXayJXYgQ3JuRWakBCZuFmYgUGaUJCLi4SbwhDI0FGIzF2dgU2YuFGZgQ3cylmZgUGaUBiLtBHM0ozNg8Gdg0Gc3ASbvJnZg4WYyByclh2YlVGczBSZoRlIsIiLlNmbhRGI0NncpZGIlhGdgQmbhByclh2YlVGczBSZoRHIm9GI0JXY0NHIlhGdg4WZldHdlJGIn5WazNXatBCduV2dgIXZwB3b0BSZoRlIbpjIlJCLyojIkJCLi4ibvlGdwV2YlJHIn5WakRWZ3Byckx2b3NHdvNEIhBSbvJnZgQWZoNXauFmdgIXZwB3b0BSZrF2YgIXZ2xWazBSZoRlI6IyciwiIyVGcw9GVgU2ahNEIlhGViojI0Jye',
+  '==Qfi4SZyVGa0BibpBychdHIlhGI5h2dgUmYgQ3JuF2YgQXYoRHIvNHIssmbpJHZgQ3boBSYgU2ah1GIvRHI5F2dgIXZoR3bg8mbgMXY3BSZyVGa0BCZuFGI5FGZzVWdUBibvBSZr9mciBSZsRHdltGIlhGVg4SYwBXdjBSYgU2ah1GIvRHIulGI05WZ3BSZoBCZpF2cg0GbvNGbh1kI6ISYiwSXi4yay92dgQ3JuNXZvRGIuVGajRXarBSZoRHIulGIn5WalJGIy9mZgU2c1NGelBycnUmbvVWbvNlIsIyP5FGZzVmbkV2Vg42bgcXZyJGIhBSZrFWbgUmbvlnbhBCZsV3bDJCLi8TZjlmZm9GIlhGdg4Wag4WZr9mciBycnQXYodlIbpjIoJCLyojI4JCLd1lIuIXZ3NnbhByb0Bycl52boBHIlhGdgQ3bnBSZ2dSSg4yazVGZgQnbvJnZgUGa0BSZ2FWZsBiclZXZuBSSiwiI0NXau9Wa0BXZjVmUiwiIhlGZh5kIbxSXi4yZulGa0BSYgg2Y19GdgQ3JuRWaEBiLhBHc1NGIhBiZsV2c51GIltWYtByb0BSZlJHa0BCd19mYhBibpBCZlBHcp5GI5xmbvBSSiwiIzRnb192YjFkIsISbs92YsFWTisFLdJiLzVWbpRHIyV3bmBCZl1WbhpGI0lEIu42bv5mclRnZhBSZoRHIm9GI0N3btBiclRnbpJHcgUGa0BCdhBychdHIJJCLi4mclRnbJJCLi0WdsxWYDJyWs0lIu42bv5mclRnZhBCbsFGIzdmbpRXZl1GIrNWYi1yb01yajFmYg4WagMXY3BSSiwiIyV2Zh5WYNJCLiUWasVnSis1W6ICciwSXi4iblh2Y0l2agUGa0Byb05WagQnbldHIvh2dgcXYzBSek9mYv5kIsIiLr5WayRGI09GagEGIltWYtByb0BSehdHIyVGa09GIv5GIzdSZyVGaUBiL5FGZzVWdUBibvBSZr9mciBSZsRHdltGIlNWamZ2bgUGaUJCLi4ibv9mbyVGdmFGI5FGZzVmbkV2Vg42bgQmch9mYwV3Yg4WZoNGdptGIlhGdg02byZGIkVmchVGcwF2cpRGIzRXa1N2cpJGIlhGVislOiUmIsIjOiQmIsIiL4FmZpxWYIBibpBiblh2Y0l2agU2YpZmZvBSZoRHIt9mcmBCZlh2cp5WY2BSZ2FGagcmbpRXZl1GI05WZpx2YgUGa0BicvZGIzRXa1N2cpJGIoN3bwBSZoRlI6IyciwiIulGVgQXa1N2cpJEIlhGViojI0Jye',
+  '==Qfi4yZulGajRXY3BCdn42chdHIlhGIvNHIs42bv5mclRnZhBCbsFGI4l2cgEGI0lGagkHZvJ2buByc39GazByav9mYlJ3bjNHIlhGVg4iZv9mcgU2c19GaiVHbjBSZoRHIvRnbvBCepNHIhBCZlJXZlh2YgUGagQWahNHI2VGRiojIhJCLdJiLkVmblBHchhGIyVmdl5GI0FGa0BCdvh2cgEGIkVmclVGajBSZu9WZt92UiwiI/QXaoBSZyV2dgMXZ4l2cgknbh1GI39GSiwiIus2bvJWZy92YzBSZoRHIrNWZoNEIuQXZrNWayNGIlhGdgMXZilmcjNXZkBSZu9WZt92UislOigmIsMjOignIs0VXi4CepNHIy9mZgY2bvJHIlNXdvhmY1x2YgUGa0Byb052bgUmbvBCdphGI5NXZu9mSg4WZodHIkVmclVGaDBiLyV3bmBCbslGdgUWZyhGdg02byZGI5JXYk5WdvJGIlhGdg42bgMXY3BSSiwiIy9GdhR3YlB3UiwiI2VGRisFLdJiLsxWYiBSYgM3cp1GI0dibklGRg4CazlmbpZGIvRHI0JXY0NHIt9mcmBCevJWZy92YzBSZoRHIulGIzF2dgkkIsIiclJ3bjNlIsIycpdXZMJyWs0lIu0WYlRHIyVGa0lWZgs2cBBiLu92buJXZ0ZWYgwGbhBSZsRGZp1GIlhGdg4WagQXdvBychdHIJJCLiUmcpBXbVJCLi4Was92QisFLdJiLzBXZ0NHIu9WaslmdhBHIlhGdg02byZGIkVGajRXY3BCZuFGIlVmcoRHI0FGIuVGajRXarBSZoRHI0ZWZsBSSiwiI5RWYsBSYlRlIsICdlJXYnJXYNJyWbpjIwJCLdJiLu9WaslmdhBHIlhGdgY2bgs2YhJGIlhGdgQXYgMXag4WZoNGdptGIlhGViwiIu42bv5mclRnZhBCbsFGI4l2cgEGI0lGagkHZvJ2buByc39GazByav9mYlJ3bjNHIlhGViwiIu0Gc0ACZuFGItB3Mg4WZldHdlJGIuV2ahRHIzF2dg4Wa0BSZoRlIbpjIlJCLyojIkJCLi4iY1x2QgQXZrNWayNEI5VGbtFmcCBSZsRHdpxEI0FGIuVGajRXarBibvlGbpZXYwBSZoRHIt9mcmByZul2czlWbgQnbldHIulGdgkXZu9WbgEWZ0BSZoRlI6IyciwiI5Vmbv1EIhVGViojI0Jye',
+  '=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',
+  '=0nIuAzNxAycpByc0JXYkBibpBSZsJWazN3bwBCd192ajVGajBCdzVGanlGagUGaUBiL0V3brNWZoNGI1cTMgEGIoRXa3BibvdHIlh2cgQWahNHI6FGaTJiOiEmIs0lIuQWZuVGcwFGagUmdhhGI0dibhNGI05WZt9WbgcWaiBycnUmbvVWbvNlIsIyPlxmYpN3cvBHI0V3brNWZoNGI0NXZodWaoBSZoRHIzdCdhh2ViwiIuUmcvN2cgEGIz52bpRnbl1GIl52bl12bTJyW6ICaiwSM6ICeiwSXdJiL5NXdiBybzBiblVmYgIXZ2VmTg4CcvR3ct42buByc05WawByZulGbsVHcgMXY3BSSiwiIklWYtJXYCJCLiUmbuFWZMJyWs0lIug2Y0FWbgUGbvh2dgUGa0BCZyF2biBSZoRHIu9GIzVmcvN2cgUGa0ByZul2asFGajBychdHIJJCLiIXZrJXYNJCLiYXZyRlIbxSXi4SZmlGbgkXbgY2bgMHdyFGZgQ3clJEIuQXdvt2Ylh2YgUzNxASYggGdpdHI0lGIu92dgkkIsICdzlGbh5WaGJCLioXYoNlIbxSXi4Cd192ajVGajBSMyEDIhBCdphGIklGZgkEI0VnYgwCbh5WamBSZoRHI0N3bMBiL0h2Zp5GIsxWYgUGaj9GIlhGdgQXYgMXY3BSSiwiI0NXasFmbpZkIsICbBByZpJkIbtlOiAnIs0lIuQHanlmbgwGbhBCclVGZgUWZyhGdgQWZrNWYwBychdHIyFmYgUGaUJCLi4CM3EDIzlGIzRnchRGIulGIlxmYpN3cvBHI0V3brNWZoNGI0NXZodWaoBSZoRlIsIiLtBXOgQmbhBSbwhDIuVWZ3RXZiBCLsFmbpZGIlhGdgcmbpJXdkByZul2czlWbgQnbldHI5hGcvJHdgUGaUJyW6ISZiwiM6ICZiwiIuIXYiBSZoRHIm9GIk5WZgUGa0BSbvJnZgQWZoNXauFmdgMXYoBCbh5WamByc0JXYkBicvh2YuFEImAib39mcDBSZoRHIy9mZgkHaw9mc0BSZoRlI6IyciwiIsFmbpZEIzRnchREIlhGViojI0Jye',
+  '9JiLkxWZpZGI0FGa0BibpBSZjFmZgEGIlV2cgQGb192YgkHZvJ2bOBiLzRHanlGb0VWZyR3cg8mbggGdpdHIkV3bsNGIrNWaoRHIyVGZuVHIu92btBydl5GIhBychdHI0lEIuU2YhZGIzdSahtEI0h2Z1F2YgQHanlGbu92btBSZoRHIklWYzBSYuRWRiojIhJCLdJiLlJXZoRHI0dibzF2dgQXYoRHI0h2ZpxGIhBSeiBydhNHIl52bl12bTJCLi8DdpBychdHIrJXYkBydvhkIsIiL3F2cgkXZoRHI39Gags2Ylh2Qg4icldmbpZGIlhGdgcmbpRnbp9GcgM3Jl52bl12bTJyW6ICaiwiM6ICeiwSXdJiLldWYsxWa2BCd4VmbgUGa0BibpByckl2ak5WYydGI51GIn5Wa0RXazlnYhJGIzF2dgkkIsIyczVmc0NXatR3cvBlIsIibh9mSisFLdJSIpF2Sgcmb19WegMXY3BCdJBiLlNWYmBicpVGa0BCdodWdhNGI0h2Zpxmbv9WbgUGaUBiLuVmdlxWZgYGbhhGI0FGIkxWZpZGIlhGdg4WagcmbpBXZlJ3YgUmbvVWbvNHI3F2cgkkIsICduFmc05WZgwWY2lmUiwiIh5GZFJyWs0lIuU2YhZGI51GIm9GI052byZGIulGIk5WYoBSetBSZlNHI0dibkxWdvNEIu4WZ2VGblBiZsFGagQXYgUmbhxGIlhGdgcmbvxWYgIWdwBSZoRHIt9mcmBSZt9GagQWZrxWY3BSSiwiIyV2Zh5WZlRlIsISahtkIbxSXi4yZul2aslWbgI3bmBSZ2lmZgQXYgAXVg4iblRHI5JGIkVmYg4WagMXY3BSSiwiIyVWbyFmRiwiIulncCJyWbpjIwJCLdJiLl5WYsBSZoRHIulGIzRHanlGb0VWZyR3cg8mbgUmchBSZyVGaUJCLi4yajFGbiBCajRXawBychdHIkxWZpZGIlhGVg4CZ19GbjByajlGa0BiclRmb1Bibv9WbgcXZuBSYgMXY3BCdJJCLi4CdodWauRWatBCZuFGItBXMxAiblV2d0VmYgwCdodWauBSehRmc1RXYTBibvBibltWY0BychdHIkFWZoBSZoRlIbpjIlJCLyojIkJCLi4CdodWauJXZ29GIkFWZoByc0lGI0N3bsBCbhZXa0NXZmBydvJ3YlJXYjNHI5JmclhGdldFIlhGdgQXYgc3byNWZyF2YzByZulmbul2dgUGaUJiOiMnIsIydvJ3YlJXYjNFIzNXZsRWYlhEIlhGViojI0Jye',
+  '=0nIuoXYHBCZs9GdgUmdhhGIkxWdvNGIvh2dgUGbw9WZwByb3RHI5xmbvBiZvBSZu9GIzF2dgUGaTBiLoNmch1EIulGIrNWYiBiclhGIkx2b0BSbptEIk5WYgwiclR3cpNHIzdSbptEIzdSZoNHI0VnQg4Cdhh2YgAXdvJ3ZgUGa0BCbpRnb1ByZulGa09mbgcXZutGIlh2cgQWahNHIh5WaUJiOiEmIs0lIuQWakBSelhGdgMXehNHIlNmblRWa2VGIlhGdgQXdiBCL39mbrBCdn4GZpRGI5VGa0Byc5F2cgUmbvVWbvNlIsIyPyVGdzl2cgM3Jtl2SgMXag8GaXJCLi8Ddhh2YgAXdvJ3ZgUGa0BSZy9mZlJGI3VmbrBybodlIbpjIoJCLxojI4JCLd1lIukXYklmcGBibvBCdhh2YgAXdvJ3ZgUGa0Byb0BCZlRGZhBCdvdGIJBiblh2dgQXdvBCZuV3bmBSes52bgkkIsISZ0FWbrJ3bXJCLiUWZMJyWs0lIu0Wd0h2YzBCdwV2agUmdhhGIkdSSg4ibvNnclBHIulGIskXYkJXd0F2Ug42bgUWbgQGbvRHItl2SiwiIlRXYtBCdzVmQiwiIrNWaNJyWs0lIuAXdgQXZzBychdHI0FGajBCc19mcnBSZoRHIslGduVHI5RnchBHIlhGdgQXdvJWYgcmbphGdgEGI39mbrBCdn4GZpRGIJJCLiIXZ0NXazBycn0WaLJCLiEmbpRlIbxSXi4iclR3cpNHI51GI0VnYgkHZvJ2buBCZs9GdgQmbhBCajJXYNBibpByajFmYg02bvJHIu9Wa0Nmb1ZGIlhGdgQWZr92biBSSiwiIlZWaXJCLi0WaLJyWbpjIwJCLdJiL3VmbrBiclR3cpNHIyVGagQmbhBSbptEIlZWa3BycnoXYHBSes52bgwCdhh2YgAXdvJ3ZgUGa0BSZy9mZlJkIsIiL0h2Zp5GI5FGZpJnRgwWa05WdgAXdgQXZzBCdn42chdHI0FGajBCc19mcnBSe0JXYwBSZoRlIsIiLl1Wa0h2YuVHbgkXYkNnc1hGVg42bgQXdvBCZuV3bmBiehdkIbpjIlJCLzojIkJCLi4SehR2cyVHaUBSeiBCdpBCd19mYhBCbsFGI3VmbrBSZIBiLoRHM0ASZzlmcwJXdzBycnoXYHBCZlxWavB3cgUmbvVWbvNlI6IyciwiI5RnchBFIlNXayBnc1NFIlhGViojI0Jye',
+  '==Qfi4SZ2FGag8GdgIXZ39GazBybuBychdHIlJXZoRHIvNHIskXYkBCbsFGImZ2bgQXdjBychdHIyVGdhdHIlhGVg4CajRXYtBSZoRHIyVGdmFGIyV2dvh2cgEGIkFGagUGagQWahNHIpJ2bUJiOiEmIs0lIuIXZ0F2dg8mbgQWYoBCdhhGdgcmbphGdl12bzBCZlNXdgUmbvVWbvNlIsIyPl1WYnBSZoRHIyVGdmFGIoNXY3BSZu9WeuFGIkxWdvNkIsIyPiVHbjBSZoRHI0FGIn5WarJ3b3BCdn42chdHI0FGaXJyW6ICaiwSM6ICeiwSXdJiLvh2dgUWZzBCdn4GZpRGIJBiLn5Wa2FWZoBychdHI0lGI0VnYgwCajRXYtBSZoRHIyVGdmFGI5V2ag02bvJHIn5Wan5WYoNGIlhGdgQWZ39mcy9mYgUmbvVWbvNlIsIicldWYuFWbgIXYCJCLi4WYKJyWs0lIuMXZ0Vnbp1GI5RnbldHdgI3bmBSehdXYgMXZu92YgUGa0ByZulGd0VHcgg2Y0lGcgUGa0BibvBychdHIJJCLig2Yh92QiwiIlZXYEJyWs0lIuIXYiBSZoRHI0FGIl52b5JXZ2VGIkVmbp9mag4WZoRHIsQWZn5WYoNGI092Zgwicld3boNHIrNWa1FHIhBCZhhGIJJCLiIXZn5WaXJCLikmYvRlIbxSXi4ibpBCZuV3byBCdzJXamBSZoRHI092ZgQmbhBSZsR3cph2dgUGa0BiclRnZhBichJGIlhGdg8GdgQHanlWYyR3cgQnbldHIJJCLi4WahRHchNkIsICazlWbhhkIbtlOiAnIs0lIuIXYiBSZoRHIk5WaoVmYgM3ZuFGagkXZrBSbv9mcgcmbpdmbhh2YgUGaUJCLi4ycylWYwVmcgI3bmBSehRGIsxWYgYmZvBCd1NGIzF2dgU2c19GaiVHbjBSZoRHIvRHIyVGdhdHIlhGViwiIuUGb0NXaodHIsFmbpZGIlhGdgIXZ0ZWYg02bvJHIn5Wan5WYoNGIlhGdg02byZGIn5WazNXatBCduV2dgkHd0l2agUGaUJyW6ISZiwiM6ICZiwiIu02bvJHIn5Wan5WYoNGIlhGdg02byZGIkVGazlmbhZHIyV3b0BSeidWdyBibvNXYlNXLm9WLk5WZgUGa0BicvZGI5RHdptGIlhGViojIzJCLikHd0l2SgIXdvRFIlhGViojI0Jye',
+  '=0nIuIXdvhGIlhGdg42bgA3boNHIlhGdgUGZpNHd19GIzB3b0NHI5xmbvBiM0ASZoRFIuQ3chBHIyVGdyFWdxBCdhBiM0ASZoRHImZ2bgQ3bnBSZoBCZpF2cgcWahJ3QiojIhJCLdJiLlJXZoRHI0dibzF2dgQXYoRHIzVnYgEGImZ2bgQ3bnBSZu9WZt92UiwiI/A3boNHIlhGdgUGZpNHd19GIw9GdzBiM0ASZoRHIzV2bkBiblh2ViwiIuUGbiFGdl1Wa0Byc1JGIlhGdgs2Ylh2QislOigmIsIjOignIs0VXi4CZhVGagUGa0ByazFEIucmbp5mcv1GIsxWYgw2bvh2YzBSZoRHI0FGIzF2dgkkIsICduFGdzl2czFGIn5WaoNWYlRlIsIibhdWZNJyWs0lIuUGdpNHIlhGdg8GdgQHanlWYyR3cgQnbldHIk5WYgkHdzFGcgEGI0h2Z19mYgwCdzFGcgIXZ0JXY1FHI0FGIyQDIlhGdgYmZvBCZlBHcvhGIJJCLiIXZkxWa1JkIsIyZpFmcDJyWs0lIuUWbvhGIzVnYgs2Yvx2Yn8GIuVmdlxWZgUGa0BCdodWdhNGIk5WYgIXZwFGcgkXbgI3bmBiblRHI0FGIulGIl1WYjBSSiwiIyVmbvl2cuVGUiwiI5ZXSisFLdJiL0V3bgUWbvNGI0dibklGZgQXdiBybnBCbsVmYgUGa0BCZyFWZoBSSg4CdzFGcgIXZ0JXY1FHIk5WdvJXYgMXZ0Vnbp1GIuVGdgI3bmBSbv9mcrN2b0NHIlhGdg4WagMXY3BSSiwiIyVGclV2aw9GaTJCLiwWYWJyWbpjIwJCLdJiLz5WZw9GI0lGIyVmdl5WZodHIzdmbpJHI0FGa0BCbsVmYgEGIzFGagI3bvRGIw9GazBSZoRlIsIiLyV3boBSZoRHIu9GIw9GazBSZoRHIlRWazRXdvBycw9GdzBSes52bgwiM0ASZoRHIsMXdiBSZnFGbslmdgUGaUJCLi4CMzoDMxASeiBSZu92ZgQmbhBSbhBTMgQXYgIXZ05WdvNGIlhGdg42bgMXY3BibpRHIlhGVislOiUmIsIjOiQmIsIiLw9GazBSZnFGbslmdgwGbldXbhJnQgQXYgIXZ05WdvNGIlhGdg02byZGIkVmchVGcwF2cpRGIulGdg42bpR3YlxGbvNGI5RXayFGajBSZoRlI6IyciwiIulGVgkHdpJXYoNEIlhGViojI0Jye',
+  '==Qfi4yay92dgQ3Ju9GZgMXZtlGajByc0lGIk5WYgkXYk52bNBSZj5WazByajVHdzBiblVmYgMXYoByaj9GbjBSZoRFIu4WZ2V2cgU2apJHdzByaj9GbjBCajJXdoNGIlhGdgQmchVGagUGazBCZpF2cgk3Y1xkI6ISYiwSXi4CZlBHcvR3cgM3J0FGa0Byaj9GbjBSYg02byZGIzVWbph2YgQmchVGagUmbvVWbvNlIsIyPrN2bsNGIoNmc1h2YgUGa0BCa0l2dgcmbvJ3dgM3J0FGaXJCLi8TZ2FGagkXZoRHIkxWdvNEIucmbphGdl12bzBCZyFWZoBSZu9WZt92UislOigmIsIjOignIs0VXi4CepNHImxWYoBSbvJnZgwWZwFGajBSZkl2cgUGa0BibpByczFmciBSZoRHIn5WaoNXas9GcgMXY3BSSiwiIyV2ZyVmViwiIlZXasNkIbxSXi4CdzFGcgYGbhhGIsxWa0BiY1BHIlhGdg4WagQnbldHIk5WYgwSZrlmc0NHIrN2bsNGIoNmc1h2YgUGa0BCZyFWZoBCLuVmdlNHI0FGI0NXYwBCZltGbhdHIJJCLiIXZn5WayBCbsVmQiwiI5NWdMJyWs0lIuMXehdHbhBychBSZtF2cgwiblZXZzBCdzFGcgkHduV2d0BCdhBSZyVGagQ3bnBSSiwiIulWY0BXYjBicld3bUJCLiMXau5WZEJyWs0lIuEWZ0BSetBicvZGIldWYyF2YpZHIlhGdg8Gdgs2YhJGI05WZ3BCZuFGI4l2cgQXYgknc0NXZ2BSZoRHIkV2aj9GbuVHIJJCLiIXYjlmdgUGaUJCLi4mbBBiL2VmUis1W6ICciwSXi4SbwZDIt9mcmBCZlt2Yvxmb1BychdHI5JHdzVmdgUGaUJCLi4yay92dgQ3Ju9GZgMXZtlGajByc0lEIukXYk52bNBSZj5WazBCepNHI0NXYwBiblRHI0FGIrNWd0NHIuVWZiBychhGIrN2bsNGIoNmc1h2YgUGaUJCLi4CMzozNgQXYgU2YpR3YhJHcgUmcvZWZiBCLn5WauVmdlBSehR2clVHVg42bgQXdjBychdHIlB3byBSZoRlIbpjIlJCLzojIkJCLi4SZjlGdjFmcwByZul2ZulmcgM3J0h2Zp5GI5FGZzVWdUBSZy9mZlJGIzdCZsF2dz9EI0NFI0FGIlB3byBCbsVmYgUGa0BCd1NGIl52bl12bTJiOiMnIsISZw9mUgwGblJEIlhGViojI0Jye',
+  '=0nIu0WY4ACbpRnb1Byc0NXZ1dGIvRHIuVGcvBCdn42cl9GZg02bvJHI0NXYmtWYlJnYgUGaUBiLuVmdlNHImxWYoBCdhBiclBHcptGIzlGagcmbpRXYlBychdHIlhGIklWYzBSZjlmcQBicNJiOiEmIs0lIuQWZ2JXZzBychdHI0lGIlJ3bmVmYgQ3chZ2ahVmciBSZ0FGIl52bl12bTJCLi8DdzFmZrFWZyJGIlZXYoByc0NXZ1dGIuF2Yg4WZodlIsIiLzVWbpRHIn5WauVGcvBSZoRHIrNWZoNkIbpjIoJCLxojI4JCLd1lIugXazBSbvJnZgIXZsl2biBSZoRHIn5Wa4lmZgIXYsxWZjBSZoRHIulGIzF2dgkkIsIibh1Wek5WYIJCLiUWatFmSisFLdJiLu9Wa09Wbt92YgUGa0BCZyFWZoBSSg4WZodHIyV2dvh2cgUGa0BibpBychdHIJJCLiUDIt92byBCL0NXZ1dkIsIicvZWYr9EIz1kIbxSXi4ydvRmbpdHIlhGdgknYgIXZwBXarBSetBCZhhGIk5WYg4WZ2V2cgYGbhhGI0FGIud3bkBSZtF2YgkkIsIiMg02bvJHIsQ3clV3RiwiIlNWayBFIy1kIbxSXi4iblZXZzBSbvJnZgMXZsJWY0BCdzFmZrFWZyJGIlhGdgcmbplXYsBychdHIJJCLikHZhxGZuFGTiwiIlxGd0V2SgMncNJyWbpjIwJCLdJiLkV2aj9GbuVHIk5WdvZGIzF2dgI3bvRGIzdCNg02bvJlIsIiLtFGOgwWa05WdgMHdzVWdnByb0BiblB3bgQ3JuNXZvRGIt92byBCdzFmZrFWZyJGIlhGViwiIu0WYwMjO3ACdhBCNg02bvJHIulGIlxmYhRHIn5WazNXZyRGIlhGdg42bg4WZlNHI0NXYsBychdHIoN2bvJnYgUGaUJyW6ISZiwSM6ICZiwiIuQ3chZ2ahVmciBSZy9mZlJGICZiQgknY0lGaXBSYgQXYg02bvJHIzdCdzVWdnBSYg02byZGIn5WazNXatBCduV2dgg2Yv9mciBCZu9WbhlGZgEkI6IyciwiI0ASbv9mUiojI0Jye',
+  '9JiLltWYsBSZoRHIk5WdvJHIvdGIvRHIkFGagUmbvlnclZXZgQmbhBycylWYwVmcgI3bmBCd1h2cgMXY3BSZnRWayJGIlhGVg4ycwFGbggGdvJGIu9GIldGZpJnYgUGb0RXasBSZoRHIkV2cz9mcjBSZoNHIklWYzBCanlWZslXYLJiOiEmIs0lIuQWZz9GbjBychdHI0FGa0ByZulGa0VWbvNHIyVmdvBibhJHIl52bl12bTJCLi8DdodWahJHdzByajFmYgUGa0BibvBCd1h2cgMXY3BCdhh2ViwiIuUGd19mcgUGa0ByajVGaDJyW6ICaiwiM6ICeiwSXdJiLyF2YgUGa0Byb0ByajFmYgQWZrxWY3BCZuFGIl52bgAXYsBibvBiZsF2YgkXbgQWZsxWdwBSSiwiIyVmbuVnUiwiIlZXZ0NlIbxSXi4CdhxmZgMXZ0Vnbp1GIvdHdtkHduV2dUBiLzVWbpRHIoR3biBSZnRWayJGIlxGd0lGbgUGa0BiclZ3bgwycwFGbg82dUJCLiIXZu5WdSJCLig2ZpVGb5F2SisFLdJiLsFWdzVHIuFGa0BicldmbvxGI0xWZGBiLzBXYsBCa09mYgU2ahxGIlhGdgQmb19mcgkXY3ByZu9GbgUGa0BCduV2dgkkIsIicl5mb1JlIsISZkFkIbxSXi4SZulGbgg2cp5WamBSZoRHIlZXYlxGI0dibklGZgQmbhBSZulmbgQXYgg2Y0F2dw9GdzBSZoRHIkVGdyFGdzBSSiwiIyVGclV2al1WaUJCLi42bpJXYNJyWbpjIwJCLdJiLltWYsBSZoRHIk5WdvJHI5F2dgcmbvxGIlhGdg82Zg8GdgQWYoBSZu9WeyVmdFBiLzJXahBXZyBicvZGI0VHazBychdHI0h2ZpFmc0NHIrNWYiBSZoRHIu9GIldGZpJnYgUGb0RXasBSZoRlIsIiLrJXYwBSZoRHIm9GIzBXYsByb3RHIzlGIlNnc192YgUGaUJCLi4CcyFGazBSbhlDI0FGIzRnchR3cg4WdyBSZoRlIbpjIlJCLyojIkJCLi4CdzVmYgwWYu92cyVGcgEGIltWYmByb0ByayFGcgUGa0BibpBya1AycnkXYkJXd0F2UgQXYgMnblt2b0BCazlmbpZGIkVGcwF2dzBSZu9WZt92UiojIzJCLisWNgsmchBFIlhGViojI0Jye',
+  '==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',
+  '=0nIuU2Yu9GIkV2ayFmYgIXZ2VmbgUGazBCd1JGIsI3bvRGI0FGa0BSeiBCdwVGbzBCZuFGIzJXZn5WYyR3cgQXYgM3ayFmYgM3clJEIuUmbvBCdhBicv9GZgs2YhJGIlhGdg8GdgAXdgQWZrxWY3BCZuFGItJXYmBSZoRHIvRHIuVWZiBiclZXZuBCZnUGagQWahNHIzlHaSJiOiEmIs0lIuQXZpVXcgQWZ5FGdzByZvRGIlhGdgQmbhBicv9GZgUGa0Byb0BSZtF2YgIXZn5WYyR3cgEkIsIyP0FGIrJXYiByczVmQgQGb192dg8GaXJCLi4yZvRGIlhGdgQXdvJWYgsmbphGVislOigmIsMjOignIs0VXi4CblNmchBHIhBSZ2FWZsByb0BSZu9GI0FGIy92bkByajFmYgUGa0Byb0BCc1BCZltGbhdHIJBiLlJ3bmVmYgUmclhGIuVWZiBiclZXZuBCZnkkIsIydlhGcl5GIn5Wa0l2cpZlIsIyc5hmUisFLdJiL0h2Zp5GZp1GIyVGdmFGIulGIkVGbsF2YgkEIuVGa3BCclVGcgEGIltWYtBCdn4GZpRGIzNXZCBiLzJXYllHIy9mZgUmclhGIn5Wat92Yg4WZlJGIlZ3JJJCLiQXZ2BSZoRlIsIyclVmUgIHRisFLdJiL0h2Zp5GIsxWYg02bvJHI51GIlZXYlxGI0dibklGZgkEIuUWbgQXYgYmZvBCZhVGagIXZoBCZltmchJGIzNXZCBiL5FGZyVGdzVWegQWZ2lmcyFGI5xmbvBSSiwiIyV2Zk9GbgcXZOJCLigWYu5WYIJyWs0lIuU2dlByZulmYtFGbgEGIu9GIn5WarNWZoNGIsUmbvBCd19mYhBSZzV3bo1mchZGIlhGdgQ3chBHIkV2asF2dgkkIsICZuFGatJXYGJCLi4WZ39kIbtlOiAnIs0lIuQHanlmbgwGbhBSZj52bgsmchJGI0dibklGZgQmbhBicv9GZgs2YhJGIlhGdgknYgQHclx2cgM3clJkIsIiL39mbrBCdn42cl9GZgUGazBSZu9WeuFGI0FGI5xGZ19GbgM3ayFmYgc2bkBXZlh2cgUGa0ByczVmQiwiIu0WYyACZuFGI0h2Zp5GZp1GIuVWZ3RXZiBCZl5WZwBXYoBCdmVGa0BSZoRlIbpjIlJCLzojIkJCLi4CdodWauBiZvBCZhVGZgUGa0BibpBSbyFmZgwGbphGIoNHbldFIhBSbvJnZgQWZoNXauFmdgknclxGbldXZKJiOiMnIsIyZvRGclVGaTBCduVGbpNFIlhGViojI0Jye',
+  '9JiLmZ2bgMXY3BSesxWZ0BycphGIvNHIs4WZ2V2cgwWa05WdgUmdpZGIt9mcmBCd1NGIyV2dvBHIhBCZhhGI0VWZyR3cgUGbvh2dgUGaUBiLuVmdlNHIsxWa0BSZ2lmZg02byZGI5xGblRHIkVGajRXY3BSZoBCZpF2cg4WZLJiOiEmIs0lIuIXZ39Gcg8mbgQWYoBCdhhGdgcmbphGdl12bzBCZlh2Y0F2dgUmbvVWbvNlIsIyP5RXajlmc0NWZsVGIzRWZl5GI0FGaXJCLi8zZulmblZXZgQXYoRHI0VWZyR3cgUGa0BibvBCZl5WZwBXYoBCdhh2VislOigmIsEjOignIs0VXi4SZ2lmZgYGbhhGIt9mcmBicvRXYyVmbldGIzdibhZHIlhGdgAXdgcmbpJXamBychdHIJJCLi4WY2Bicldmc1JkIsIibulHTisFLdJiLk92b3ByZul2ajFGdzBCLkxWZpZGIlhGdg42bgEmck5WYTBCa0l2dgMXY3BSSiwiIyVGcsVGag4WZlRlIsICaz9mSisFLdJiLuVmdlNHIsxWa0BSZ2lmZg02byZGI5xGblRHIlhGdgcmbph2Y0F2dgcmbp5WZ2VGIsxWYg4WagMXY3BSSiwiIyV3bih2ZpVmbgI3bvRWL0hXZOJCLi4WZLJyWs0lIuQGbllmZgUmcpZmbvJGIlhGdgAXdgQXZzByb0BCduV2dgQmbhBSZ2lmZgQXYgQXdoBSZoRHIkV2aj9GbgkkIsIiclRWYlxGI0V3bjNlIsISYyRmbhNlIbtlOiAnIs0lIuM3dvRmbpdHIv5GIzFGagQXdoBCd192YzBSZoRlIsIiLtB3NgwWa05Wdg0Gc1ASbvJnZgwCZlRWdsNmbpBCd1hGI0V3bjNHIsQXZlJHdzBSZs9Ga3BSZoRHI0lGagQXdjBicld3bwBSQiwiIu0Gc2ACZuFGItBXNg4WZldHdlJGIn5WazNXatBCduV2dgM3ay92dlJXamBSZoRlIbpjIlJCLyojIkJCLi4SehxGczlGZgcWaiBSZoRHIlJ3bmVmYgMnc19GagQXdoBCd192YzBSZoRHIt9mcmBCZlh2cp5WY2BycrJ3b3VmcpZGIm9GI49mYgUGaUJiOiMnIsICdodWaOBSZylmZu9mQiojI0Jye',
+  '==Qfi4CZul2dgUGa0BiZvBSZzVXYjVmYgcmbp5WZ2VGIsxWYgQXdoNHIzF2dgwWZlh2dgUGaUBiL0NXYwBiZsFGagwGbpRHIuVmdlNHIt9mcmBCblVGa3ByZpJGIlhGdg42bgMXY3BSZoNHIklWYzBSYt1WZHJiOiEmIs0lIuQXdoNHIzF2dgQXYoRHIn5WaoRXZt92cgUGZvJHIl52bl12bTJCLi4SZj5WZklmdlBiZvBSZjVWawBCZu92YlNHIlhGdgs2Ylh2QiwiI/QHanlmbvRHIn5Wau5WdyBCdn42chdHI0FGaXJyW6ICaiwiM6ICeiwSXdJiLhh2cpFEIrNXQg4SZtlGdgUGbvh2dgUGa0BCblNXdvJXYjBSZoRHI5JGIn5Wa5FGbwBychdHIJJCLiIXZrNXdCJCLi4mbpZkIbxSXi4yc0h2ZpxGIlhGdgQXYgcmbpt2bvxGIsQ3chBHImxWYoBCbslGdg4WZ2V2cg02byZGIsVWZodHInlmYgUGa0BibvBCc1BychdHIJJCLiIXZwB3boNlIsISYt1WZHJyWs0lIuMXY3BCdpBCLkV2ajFGUg4CdodWauBCbsFGIsV2c19mchNGIlhGdgcmbp5mb1JHIzF2dgkkIsIicvRXYyVGcvBCblNXdvJXYDJCLiEGazlWQisFLdJiLl5WaoNWYtBCazF2YgUGa0BSbvJnZgU2ZuFGajBCdldGIvRHIzVGd15WatBiblRHIy9mZgQXdoBSZoRHI0ZWZsBSSiwiIyVGZs9GasxWY0NlIsISZp5mclJkIbtlOiAnIs0lIuwWZzV3byF2YgUGa0Byb0BCd4VmbgQHanlmcgMXagQXdoBSZoRlIsIiLzRmbpdHIodWaoBiZvBSZzVXYjVmYgcmbp5WZ2VGIsxWYgQXdoNHIzF2dgwWZlh2dgcWaiBSZoRlIsIiLtBHMzozNgQmbhBSbwdDIuVWZ3RXZiByZul2czlWbgQnbldHI49mYgg2chNGIlhGVislOiUmIsIjOiQmIsIiL0V2ayFWbgMXYtR3cpJHaDBSe0l2YgUGa0BCdhBCd1hGIl5Wa3BCZlxGb11GIlhGdg02byZGIkVGazlmbhZHI49mYgg2chNGIlhGViojIzJCLiQXZrJXYNBych1GdzlmcoNEIlhGViojI0Jye',
+];
+
+/* ================= Helpers ================= */
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const encode = p => btoa(unescape(encodeURIComponent(JSON.stringify(p)))).split('').reverse().join('');
+const decode = s => JSON.parse(decodeURIComponent(escape(atob(s.split('').reverse().join('')))));
+const SEALS = ['#b591ff', '#f4c35a', '#5fd39b', '#ff9a5c'];
+const LEVELS = ['', 'Easy', 'Tricky', 'Fiendish'];
+
+function londonNow() {
+  const o = {};
+  new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23'})
+    .formatToParts(new Date(Date.now() - RESET_HOUR * 3600e3)).forEach(p => o[p.type] = p.value);
+  return o;
+}
+function dayNumber() {
+  const o = londonNow(), [y, m, d] = LAUNCH.split('-').map(Number);
+  return Math.max(1, Math.round((Date.UTC(+o.year, +o.month - 1, +o.day) - Date.UTC(y, m - 1, d)) / 864e5) + 1);
+}
+function secondsToNext() { const o = londonNow(); return 86400 - (+o.hour * 3600 + +o.minute * 60 + +o.second); }
+const hms = s => [s / 3600 | 0, (s % 3600) / 60 | 0, s % 60].map(n => String(n).padStart(2, '0')).join(':');
+const mmss = s => `${s / 60 | 0}:${String(s % 60).padStart(2, '0')}`;
+function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffled(arr, rand = Math.random) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+const dateFor = n => { const [y, m, d] = LAUNCH.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n - 1)); };
+const initial = n => (n.replace(/^(Mr|Mrs|Ms|Miss|Dr|Lady|Lord|Sir|Rev\.?)\s+/i, '')[0] || '?').toUpperCase();
+
+/* ================= Case + state ================= */
+const params = new URLSearchParams(location.search);
+const TEST = params.get('test');   // practice preview from the case maker: nothing is saved
+const DAY = dayNumber();
+let C = null;
+try { C = TEST ? decode(TEST) : decode(PUZZLES[(DAY - 1) % PUZZLES.length]); } catch (e) { C = null; }
+// Suspects appear in the same shuffled order for everyone today, so the Fibber isn't always in the same seat
+let ORDER = C ? (Array.isArray(C.o) && C.o.length === 4 ? C.o : shuffled([0, 1, 2, 3], rng(DAY * 7919 + 31))) : [];   // a case can fix its own order with o
+let TC = C ? C.x : -1;
+
+const KEY = 'porkies-state', SKEY = 'porkies-stats';
+const fresh = () => ({day: DAY, pick: -1, hints: 0, secs: 0, status: 'play'});   // status: play | won | lost
+let S = (() => {
+  if (TEST) return fresh();
+  const s = store.get(KEY, null);
+  return s && s.day === DAY && typeof s.secs === 'number' ? s : fresh();
+})();
+const save = () => { if (!TEST) store.set(KEY, S); };
+const blankStats = () => ({played: 0, wins: 0, streak: 0, best: 0, lastDay: 0, lastWin: 0, dist: [0, 0, 0, 0]});
+let stats = Object.assign(blankStats(), store.get(SKEY, {}));
+const streakNow = () => stats.lastWin >= DAY - 1 ? stats.streak : 0;   // caught the Fibber on consecutive days
+const done = () => S.status !== 'play';
+let sel = -1, busy = false, judging = false;
+
+/* ================= Sound ================= */
+let soundOn = store.get('porkies-sound', true), actx = null;
+function ac() {
+  if (!soundOn) return null;
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch (e) { return null; }
+  return actx;
+}
+function beep(freq, dur, type = 'sine', gain = .04, delay = 0, slideTo) {
+  const c = ac(); if (!c) return;
+  const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + delay;
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(gain, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .02);
+}
+const sfx = {
+  pick:  n => beep([392, 440, 494, 523][n] || 440, .14, 'triangle', .045, 0, ([392, 440, 494, 523][n] || 440) * 1.02),
+  snuff: () => { beep(1320, .16, 'sine', .03); beep(1760, .3, 'sine', .022, .07); },
+  drum:  () => { for (let i = 0; i < 9; i++) beep(110 + i * 6, .09, 'triangle', .05, i * .14); },
+  caught:() => [392, 523, 659, 784, 1047].forEach((f, i) => beep(f, .3, 'triangle', .05, i * .1)),
+  fooled:() => { beep(330, .3, 'sawtooth', .03); beep(262, .35, 'sawtooth', .03, .28); beep(196, .6, 'sawtooth', .03, .58); }
+};
+const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>';
+function paintSound() {
+  $('soundBtn').innerHTML = SPEAKER + (soundOn ? '<path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>' : '<path d="M17 9l5 6M22 9l-5 6"/></svg>');
+  $('soundBtn').setAttribute('aria-label', soundOn ? 'Sound on' : 'Sound off');
+  $('soundBtn').setAttribute('aria-pressed', soundOn);
+}
+
+/* Background music: loops quietly while a case is being played, fades out when you accuse.
+   Put soundtrack.mp3 in the same folder as this page. The speaker button turns music and effects on and off together. */
+const MUSIC_SRC = 'soundtrack.mp3';
+const MUSIC_VOL = 0.35;
+let music = null, musicGain = null, musicFadeT = null;
+function musicSetup() {
+  if (music) return music;
+  music = new Audio(MUSIC_SRC); music.loop = true; music.preload = 'auto';
+  music.addEventListener('error', () => { music.broken = true; });
+  const c = ac();
+  // routed through Web Audio so the volume and fades also work on iPhone
+  if (c) { try { const src = c.createMediaElementSource(music); musicGain = c.createGain(); musicGain.gain.value = 0; src.connect(musicGain); musicGain.connect(c.destination); } catch (e) { musicGain = null; } }
+  if (!musicGain) music.volume = 0;
+  return music;
+}
+function musicFade(to, ms) {
+  if (!music) return;
+  clearInterval(musicFadeT);
+  if (musicGain && actx) {
+    const t = actx.currentTime, g = musicGain.gain;
+    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(to, t + ms / 1000);
+    return;
+  }
+  const from = music.volume, steps = Math.max(1, ms / 50 | 0); let n = 0;
+  musicFadeT = setInterval(() => { n++; music.volume = Math.max(0, Math.min(1, from + (to - from) * n / steps)); if (n >= steps) clearInterval(musicFadeT); }, 50);
+}
+function musicPlay() {
+  if (!soundOn || done() || document.hidden) return;
+  const m = musicSetup(); if (m.broken) return;
+  clearTimeout(musicStop.t);
+  if (m.paused) { const p = m.play(); if (p && p.catch) p.catch(() => {}); }
+  musicFade(MUSIC_VOL, 1500);
+}
+function musicStop(ms = 700) {
+  if (!music || music.paused) return;
+  musicFade(0, ms);
+  clearTimeout(musicStop.t);
+  musicStop.t = setTimeout(() => { if (music) music.pause(); }, ms + 60);
+}
+
+/* ================= Rendering ================= */
+function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 1800); }
+const MAG = on => `<svg class="mag${on ? '' : ' used'}" viewBox="0 0 20 20" aria-hidden="true">
+  <line x1="12.4" y1="12.4" x2="17.6" y2="17.6" stroke="${on ? '#b8793a' : '#5a3a40'}" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="8" cy="8" r="6" fill="${on ? 'rgba(245,194,107,.2)' : 'rgba(255,255,255,.04)'}" stroke="${on ? '#f5c26b' : '#7a5560'}" stroke-width="2"/>
+  <path class="glint" d="M4.9 7.1a3.3 3.3 0 0 1 2.2-2.3" fill="none" stroke="#fff6dd" stroke-width="1.3" stroke-linecap="round"/>
+</svg>`;
+const mags = n => [0, 1, 2].map(i => MAG(i < 3 - n)).join('');
+const CLOCK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5" stroke-linecap="round"/></svg>';
+function paintClock() { $('clock').innerHTML = CLOCK + mmss(S.secs); }
+
+function renderCase() {
+  $('kicker').textContent = TEST ? 'Practice preview' : `Case No. ${DAY}`;
+  const lv = Math.min(3, Math.max(1, C.d || 1));
+  $('level').textContent = LEVELS[lv]; $('level').className = 'chip lv' + lv;
+  $('caseTitle').textContent = C.t; $('scene').textContent = C.s;
+  $('evidence').innerHTML = C.e.map((e, i) => `<li style="animation-delay:${80 + i * 70}ms">${esc(e)}</li>`).join('');
+  paintClock();
+}
+function renderHints() {
+  $('hints').innerHTML = C.h.slice(0, S.hints).map((h, i) => `<div class="hintcard"><b>Hint ${i + 1}</b><span>${esc(h)}</span></div>`).join('');
+  $('hintLabel').hidden = !S.hints;
+  $('btnCandles').innerHTML = mags(S.hints);
+  $('hintBtn').disabled = done() || S.hints >= 3 || busy;
+  $('hintBtn').setAttribute('aria-label', S.hints >= 3 ? 'No hints left' : `Use a hint. ${3 - S.hints} left`);
+}
+function renderSuspects() {
+  $('suspects').innerHTML = ORDER.map((pi, k) => {
+    const [n, r, q] = C.p[pi];
+    let cls = '', badge = '';
+    if (done()) {
+      if (pi === TC) { cls = ' fibber'; badge = '<span class="badge tc">Fibber</span>'; }
+      else if (pi === S.pick) { cls = ' innocent'; badge = '<span class="badge fa">Innocent</span>'; }
+      else cls = ' dim';
+    } else if (pi === sel) cls = ' on';
+    return `<button class="sus${cls}" data-p="${pi}" aria-pressed="${pi === sel}" ${done() ? 'disabled' : ''} style="animation-delay:${200 + k * 80}ms">
+      <span class="seal" style="--sc:${SEALS[k]}" aria-hidden="true">${esc(initial(n))}</span>
+      <span class="who"><b>${esc(n)}</b><small>${esc(r)}</small></span>
+      <span class="q">“${esc(q)}”</span>${badge}
+      <span class="veil" aria-hidden="true"><span>${esc(n)} is<i>.</i><i>.</i><i>.</i></span></span>
+    </button>`;
+  }).join('');
+}
+function renderVote() {
+  const b = $('voteBtn');
+  b.disabled = sel < 0 || busy;
+  b.textContent = sel < 0 ? 'Pick a suspect' : `Accuse ${C.p[sel][0]}`;
+  b.classList.toggle('ready', sel >= 0 && !busy);
+}
+function render() {
+  renderCase(); renderHints(); renderSuspects(); renderVote();
+  $('act').hidden = done();
+  $('note').textContent = done()
+    ? (S.status === 'won' ? 'You caught the Fibber.' : 'The Fibber fooled you this time.')
+    : 'Three are Innocent. One is the Fibber, and their story doesn’t add up.';
+  if (done() && !judging) showResult(); else $('result').hidden = true;
+}
+
+/* ================= Playing ================= */
+function pick(pi) {
+  if (busy || done()) return;
+  sel = sel === pi ? -1 : pi;
+  if (sel >= 0) sfx.pick(ORDER.indexOf(pi));
+  $('suspects').querySelectorAll('.sus').forEach(el => { const on = +el.dataset.p === sel; el.classList.toggle('on', on); el.setAttribute('aria-pressed', on); });
+  renderVote();
+}
+function useHint() {
+  if (busy || done() || S.hints >= 3) return;
+  S.hints++; save(); sfx.snuff();
+  renderHints();
+  const cards = $('hints').children; const last = cards[cards.length - 1];
+  if (last) last.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'center'});
+}
+async function vote() {
+  if (busy || done() || sel < 0) return;
+  busy = true; judging = true;
+  musicStop(700);
+  S.pick = sel; S.status = sel === TC ? 'won' : 'lost';
+  save(); record();
+  renderVote(); renderHints();
+  const card = $('suspects').querySelector(`[data-p="${sel}"]`);
+  card.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'center'});
+  $('suspects').querySelectorAll('.sus').forEach(el => el.disabled = true);
+  if (!reduceMotion) { card.classList.add('judging'); sfx.drum(); await wait(1500); }
+  sel = -1;
+  renderSuspects(); $('act').hidden = true;
+  const out = $('suspects').querySelector(`[data-p="${S.pick}"]`);
+  if (S.status === 'won') sfx.caught();
+  else { sfx.fooled(); out.classList.add('shake'); if (navigator.vibrate) navigator.vibrate(80); }
+  await wait(reduceMotion ? 0 : 900);
+  judging = false; busy = false;
+  render();
+  setTimeout(() => $('result').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'start'}), reduceMotion ? 0 : 200);
+}
+function record() {
+  if (TEST || stats.lastDay === DAY) return;
+  stats.played++;
+  stats.lastDay = DAY;
+  if (S.status === 'won') {
+    stats.wins++;
+    stats.streak = stats.lastWin === DAY - 1 ? stats.streak + 1 : 1;
+    stats.lastWin = DAY;
+    stats.best = Math.max(stats.best, stats.streak);
+    stats.dist[S.hints]++;
+  } else stats.streak = 0;
+  store.set(SKEY, stats);
+}
+
+/* ================= Results ================= */
+const VERDICT = ['Sharp as a tack', 'Good instincts', 'Got there in the end', 'Saved by the clues'];
+const hintWords = h => h === 0 ? 'no hints' : h === 1 ? '1 hint' : h + ' hints';
+function showResult() {
+  const R = $('result');
+  if (!R.hidden && R.dataset.day == DAY) { tick(); return; }
+  const won = S.status === 'won', st = streakNow(), tc = C.p[TC][0], picked = C.p[S.pick] ? C.p[S.pick][0] : '?';
+  const line = won
+    ? `You accused <b>${esc(tc)}</b> with <b>${hintWords(S.hints)}</b> in <b>${mmss(S.secs)}</b>.`
+    : `You accused <b>${esc(picked)}</b>, who was Innocent. The Fibber was <b>${esc(tc)}</b>.`;
+  R.hidden = false; R.dataset.day = DAY;
+  R.innerHTML = `
+    <span class="stamp${won ? '' : ' fail'}">${won ? 'Caught' : 'Fooled'}</span>
+    <h2 class="verdict">${won ? VERDICT[S.hints] : 'Hoodwinked!'}</h2>
+    <p class="line">${line}</p>
+    <div class="why"><b>How the story fell apart</b>${esc(C.a)}</div>
+    <div class="tally"><span class="mags" aria-label="${3 - S.hints} magnifying glasses left">${mags(S.hints)}</span><span>${mmss(S.secs)}</span></div>
+    ${st > 0 && !TEST ? `<p class="streak">Caught streak: ${st} day${st === 1 ? '' : 's'}</p>` : ''}
+    ${TEST ? '<div class="btns"><button class="btn ghost" onclick="location.reload()">Play it again</button></div>'
+      : `<div class="btns"><button class="btn" id="shareImg">Share image</button><button class="btn ghost" id="copyBtn">Copy result</button></div>
+    <p class="next">Next case in <b id="countdown">--:--:--</b></p>`}`;
+  if (!TEST) { $('shareImg').onclick = shareImage; $('copyBtn').onclick = copyResult; }
+  tick();
+}
+
+function shareText() {
+  const won = S.status === 'won', st = streakNow();
+  const flames = '🔍'.repeat(3 - S.hints) + '⚫'.repeat(S.hints);
+  return `🥧 Porkies · Case No. ${DAY}\n${won ? '✅ Caught the Fibber' : '❌ Fooled by the Fibber'}\n${flames} ⏱️ ${mmss(S.secs)}` +
+    (st > 1 ? `\n🔥 ${st} day streak` : '') + `\n${SITE_URL}`;
+}
+async function copyResult() {
+  const t = shareText();
+  try { await navigator.clipboard.writeText(t); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('Copied. No spoilers, promise');
+}
+function renderStats() {
+  const s = stats;
+  $('statsGrid').innerHTML = [['Played', s.played], ['Caught %', s.played ? Math.round(s.wins / s.played * 100) : 0], ['Streak', streakNow()], ['Best', s.best]]
+    .map(([l, v]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
+  const mx = Math.max(1, ...s.dist), today = S.status === 'won' ? S.hints : -1;
+  $('dist').innerHTML = s.dist.map((v, i) => `<div class="bar"><span>${i}</span><i class="${i === today ? 'hl' : ''}" style="width:${Math.max(8, v / mx * 90)}%">${v}</i></div>`).join('');
+}
+function tick() {
+  const s = secondsToNext();
+  const a = $('countdown'), b = $('statsCountdown');
+  if (a) a.textContent = hms(s);
+  if (b) b.textContent = hms(s);
+  if (s <= 1 && !TEST) setTimeout(() => location.reload(), 1500);
+}
+
+/* ================= Canvas drawing (share image + og-image) ================= */
+async function fontsReady() {
+  try { await Promise.all(["400 100px 'DM Serif Display'", "italic 400 50px 'DM Serif Display'", "500 30px 'DM Mono'", "400 30px 'DM Mono'", "700 30px 'DM Sans'"].map(f => document.fonts.load(f))); } catch (e) {}
+}
+function rrect(x, a, b, w, h, r) {
+  x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r);
+  x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath();
+}
+function bg(x, W, H) {
+  x.fillStyle = '#120709'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W / 2, -H * .05, 0, W / 2, -H * .05, H * .8);
+  g.addColorStop(0, 'rgba(225,29,72,.32)'); g.addColorStop(1, 'rgba(225,29,72,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  g = x.createRadialGradient(W / 2, H * 1.05, 0, W / 2, H * 1.05, H * .6);
+  g.addColorStop(0, 'rgba(245,194,107,.1)'); g.addColorStop(1, 'rgba(245,194,107,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.save(); x.strokeStyle = 'rgba(255,154,168,.06)'; x.lineWidth = 2;
+  for (let oy = -80; oy < H + 160; oy += 160) for (let ox = -56; ox < W + 112; ox += 112) {
+    x.beginPath(); x.moveTo(ox + 56, oy); x.lineTo(ox + 112, oy + 80); x.lineTo(ox + 56, oy + 160); x.lineTo(ox, oy + 80); x.closePath(); x.stroke();
+  }
+  x.restore();
+}
+function frameLine(x, X, Y, W, H) {
+  x.strokeStyle = 'rgba(255,168,180,.45)'; x.lineWidth = 2; rrect(x, X, Y, W, H, 28); x.stroke();
+  x.strokeStyle = 'rgba(255,168,180,.18)'; x.lineWidth = 1.5; rrect(x, X + 14, Y + 14, W - 28, H - 28, 18); x.stroke();
+}
+function text(x, t, cx, y, font, fill, ls) {
+  x.font = font; x.fillStyle = fill; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  if ('letterSpacing' in x) x.letterSpacing = ls || '0px';
+  x.fillText(t, cx, y);
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+}
+function gradTitle(x, t, cx, y, size) {
+  const font = `400 ${size}px 'DM Serif Display',Georgia,serif`; x.font = font;
+  const w = x.measureText(t).width, g = x.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+  g.addColorStop(0, '#e11d48'); g.addColorStop(1, '#ff4f8b');
+  text(x, t, cx, y, font, g);
+}
+function footerLine(x, cx, y, size) {
+  const a = 'A new daily deduction puzzle from ', b = 'Puzzl';
+  const fa = `400 ${size}px 'DM Mono',monospace`, fb = `500 ${size}px 'DM Mono',monospace`;
+  x.font = fa; const wa = x.measureText(a).width; x.font = fb; const wb = x.measureText(b).width;
+  const sx = cx - (wa + wb) / 2; x.textAlign = 'left';
+  x.font = fa; x.fillStyle = '#c79aa3'; x.fillText(a, sx, y);
+  x.font = fb; x.fillStyle = '#ffffff'; x.fillText(b, sx + wa, y);
+}
+function pill(x, t, cx, y, h, size) {
+  const font = `italic 400 ${size}px 'DM Serif Display',Georgia,serif`; x.font = font;
+  const w = x.measureText(t).width + h;
+  rrect(x, cx - w / 2, y, w, h, h / 2); x.fillStyle = '#200c11'; x.fill(); x.strokeStyle = 'rgba(255,168,180,.5)'; x.lineWidth = 2; x.stroke();
+  text(x, t, cx, y + h / 2 + size * .33, font, '#ffdde2');
+}
+function stampDraw(x, t, cx, cy, size, col) {
+  x.save(); x.translate(cx, cy); x.rotate(-6 * Math.PI / 180);
+  x.font = `500 ${size}px 'DM Mono',monospace`;
+  if ('letterSpacing' in x) x.letterSpacing = size * .16 + 'px';
+  const w = x.measureText(t).width + size * 1.2, h = size * 1.75;
+  x.fillStyle = 'rgba(18,7,9,.92)'; rrect(x, -w / 2, -h / 2, w, h, size * .35); x.fill();
+  x.strokeStyle = col; x.lineWidth = size * .13; rrect(x, -w / 2, -h / 2, w, h, size * .35); x.stroke();
+  x.lineWidth = size * .07; const p = size * .24; rrect(x, -w / 2 + p, -h / 2 + p, w - 2 * p, h - 2 * p, size * .2); x.stroke();
+  x.fillStyle = col; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, size * .08, size * .04);
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+  x.restore();
+}
+/* A magnifying glass: unused ones glow gold, used ones go dark */
+function magDraw(x, cx, cy, r, on) {
+  if (on) {
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r * 2.4);
+    g.addColorStop(0, 'rgba(245,194,107,.32)'); g.addColorStop(1, 'rgba(245,194,107,0)');
+    x.fillStyle = g; x.fillRect(cx - r * 2.6, cy - r * 2.6, r * 5.2, r * 5.2);
+  }
+  x.save(); x.lineCap = 'round';
+  const a = r * .76, b = r * 1.75;
+  x.strokeStyle = on ? '#b8793a' : '#4f3237'; x.lineWidth = r * .42;
+  x.beginPath(); x.moveTo(cx + a, cy + a); x.lineTo(cx + b, cy + b); x.stroke();
+  x.strokeStyle = on ? '#8a5527' : '#3d272b'; x.lineWidth = r * .5;
+  x.beginPath(); x.moveTo(cx + r * .72, cy + r * .72); x.lineTo(cx + r * .92, cy + r * .92); x.stroke();
+  x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2);
+  x.fillStyle = on ? 'rgba(245,194,107,.18)' : 'rgba(255,255,255,.03)'; x.fill();
+  x.strokeStyle = on ? '#f5c26b' : '#6e4a53'; x.lineWidth = r * .2; x.stroke();
+  if (on) {
+    x.strokeStyle = 'rgba(255,246,221,.9)'; x.lineWidth = r * .11;
+    x.beginPath(); x.arc(cx, cy, r * .6, Math.PI * 1.05, Math.PI * 1.45); x.stroke();
+  }
+  x.restore();
+}
+async function drawShare() {
+  await fontsReady();
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  bg(x, W, H);
+  frameLine(x, 60, 60, 960, 1230);
+  const won = S.status === 'won', st = streakNow();
+  text(x, `CASE NO. ${DAY}`, 540, 180, "500 30px 'DM Mono',monospace", '#ffdde2', '10px');
+  gradTitle(x, 'Porkies', 540, 310, 132);
+  text(x, C.t, 540, 380, "italic 400 46px 'DM Serif Display',Georgia,serif", '#ffdde2');
+  // three magnifying glasses: one used up for every hint
+  [0, 1, 2].forEach(i => magDraw(x, 520 + (i - 1) * 230, 640, 72, i < 3 - S.hints));
+  stampDraw(x, won ? 'CAUGHT' : 'FOOLED', 810, 470, 44, won ? '#5fd39b' : '#ff4d6d');
+  const res = won ? `CAUGHT WITH ${hintWords(S.hints).toUpperCase()}` : 'HOODWINKED BY THE FIBBER';
+  let y = 880;
+  text(x, res, 540, y, "500 32px 'DM Mono',monospace", '#fff4f5', '3px');
+  y += 54; text(x, `IN ${mmss(S.secs)}`, 540, y, "500 30px 'DM Mono',monospace", '#ffdde2', '6px');
+  if (st > 1) { y += 52; text(x, `${st} DAY STREAK`, 540, y, "500 30px 'DM Mono',monospace", '#f5c26b', '6px'); }
+  pill(x, '“Can you spot the Fibber?”', 540, Math.max(y + 46, 1050), 86, 42);
+  text(x, SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''), 540, 1236, "400 28px 'DM Mono',monospace", '#c79aa3');
+  footerLine(x, 540, 1328, 24);
+  return cv;
+}
+async function shareImage() {
+  const cv = await drawShare();
+  const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+  const file = new File([blob], `porkies-${DAY}.png`, {type: 'image/png'});
+  if (navigator.canShare && navigator.canShare({files: [file]})) {
+    try { await navigator.share({files: [file], text: shareText()}); } catch (e) {}
+    return;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Image saved');
+}
+function sealDraw(x, cx, cy, r, col, letter, fill) {
+  x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fillStyle = col; x.fill();
+  const g = x.createRadialGradient(cx - r * .3, cy - r * .35, 0, cx - r * .3, cy - r * .35, r * .7);
+  g.addColorStop(0, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fill();
+  x.strokeStyle = 'rgba(0,0,0,.18)'; x.lineWidth = r * .1; x.beginPath(); x.arc(cx, cy, r * .93, 0, Math.PI * 2); x.stroke();
+  x.font = `400 ${r * 1.05}px 'DM Serif Display',Georgia,serif`; x.fillStyle = fill; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText(letter, cx, cy + r * .06);
+}
+async function drawOG() {
+  await fontsReady();
+  const W = 1200, H = 630, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  bg(x, W, H);
+  frameLine(x, 110, 46, 980, 536);
+  text(x, "TODAY'S CASE", 600, 136, "500 22px 'DM Mono',monospace", '#ffdde2', '8px');
+  gradTitle(x, 'Porkies', 600, 246, 112);
+  text(x, 'Someone\u2019s telling porkies.', 600, 302, "italic 400 38px 'DM Serif Display',Georgia,serif", '#ffdde2');
+  const cols = ['#b591ff', '#f4c35a', '#ff4d6d', '#5fd39b'];
+  cols.forEach((c, i) => {
+    const cx = 600 + (i - 1.5) * 150;
+    sealDraw(x, cx, 420, 54, c, '?', i === 2 ? '#ffffff' : '#1a1230');
+  });
+  x.save(); x.strokeStyle = '#ff4f8b'; x.lineWidth = 4; x.shadowColor = 'rgba(255,79,139,.8)'; x.shadowBlur = 12;
+  x.beginPath(); x.arc(675, 420, 66, 0, Math.PI * 2); x.stroke(); x.restore();
+  footerLine(x, 600, 540, 20);
+  return cv;
+}
+
+/* ================= Case maker (?make) ================= */
+function maker() {
+  document.title = 'Case maker · Porkies';
+  const opts = PUZZLES.map((_, i) => `<option value="${i}">No. ${i + 1} · ${dateFor(i + 1).toLocaleDateString('en-GB', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'})}</option>`).join('');
+  const ta = (id, ph, lab) => `<label for="${id}">${lab}</label><textarea id="${id}" placeholder="${ph}"></textarea>`;
+  $('app').innerHTML = `
+    <div class="maker">
+      <h1>Porkies</h1>
+      <h2>Case maker</h2>
+      <p>Write the case, pick which suspect is lying, then press <b>Make line</b> and paste it on a new row at the bottom of the PUZZLES list in index.html. The next empty day is No. ${PUZZLES.length + 1} (${dateFor(PUZZLES.length + 1).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', timeZone: 'UTC'})}).</p>
+      <p>Golden rule: <b>exactly one</b> story should clash with the evidence. Read the other three back and make sure they could all be true.</p>
+      <div class="mk-group"><label for="mkLoad">Load an existing case to check or edit it</label>
+        <select id="mkLoad"><option value="">Choose a case…</option>${opts}</select></div>
+      <div class="mk-group">
+        <label for="mT">Case title</label><input id="mT" maxlength="40" placeholder="e.g. The Missing Cup">
+        ${ta('mS', 'One or two sentences setting the scene', 'The scene')}
+        <label for="mD">Difficulty</label><select id="mD"><option value="1">Easy</option><option value="2">Tricky</option><option value="3">Fiendish</option></select>
+      </div>
+      <div class="mk-group" style="--gc:var(--gold)">${[0, 1, 2].map(i => ta('mE' + i, 'A fact the player can trust', 'Evidence ' + (i + 1))).join('')}</div>
+      ${[0, 1, 2, 3].map(i => `<div class="mk-group" style="--gc:${SEALS[i]}">
+        <label for="mN${i}">Suspect ${i + 1}: name</label><input id="mN${i}" maxlength="22">
+        <label for="mR${i}">Role</label><input id="mR${i}" maxlength="28" placeholder="e.g. The butler">
+        ${ta('mQ' + i, 'Their side of the story, in their own words', 'Their story')}
+        <label class="rad"><input type="radio" name="mX" value="${i}"> This one is the Fibber</label></div>`).join('')}
+      <div class="mk-group" style="--gc:var(--gold)">${[0, 1, 2].map(i => ta('mH' + i, ['Gentle nudge', 'Points at the right evidence', 'Nearly gives it away'][i], 'Hint ' + (i + 1))).join('')}</div>
+      <div class="mk-group" style="--gc:var(--blood)">${ta('mA', 'Why the Fibber’s story can’t be true', 'How the story fell apart')}</div>
+      <p class="mk-note" id="mkNote"></p>
+      <div class="mk-row"><button class="btn" id="mkMake">Make line</button><button class="btn ghost" id="mkTest">Test play it</button></div>
+      <textarea class="out" id="mkOut" readonly aria-label="Line to paste"></textarea>
+      <div class="mk-row"><button class="btn ghost" id="mkCopy">Copy line</button></div>
+    </div>`;
+  const v = id => $(id).value.trim().replace(/\s+/g, ' ');
+  const note = (t, c) => { $('mkNote').textContent = t; $('mkNote').className = 'mk-note ' + (c || ''); };
+  const read = () => {
+    const xr = document.querySelector('input[name="mX"]:checked');
+    const c = {t: v('mT'), s: v('mS'), d: +$('mD').value, e: [0, 1, 2].map(i => v('mE' + i)),
+      p: [0, 1, 2, 3].map(i => [v('mN' + i), v('mR' + i), v('mQ' + i).replace(/^["“]|["”]$/g, '')]),
+      x: xr ? +xr.value : -1, h: [0, 1, 2].map(i => v('mH' + i)), a: v('mA')};
+    if (!c.t || !c.s || c.e.some(e => !e) || c.p.some(p => p.some(f => !f)) || c.h.some(h => !h) || !c.a) { note('Fill in every box.', 'bad'); return null; }
+    if (c.x < 0) { note('Pick which suspect is the Fibber.', 'bad'); return null; }
+    const names = c.p.map(p => p[0].toLowerCase());
+    if (new Set(names).size < 4) { note('Two suspects share a name. Give everyone a different one.', 'bad'); return null; }
+    const long = c.p.find(p => p[2].length > 140);
+    note(long ? `Made. Heads up: ${long[0]}'s story is long for a phone screen.` : 'Made. Copy the line and paste it into the PUZZLES list.', long ? 'warn' : 'good');
+    return c;
+  };
+  $('mkMake').onclick = () => { const c = read(); if (c) $('mkOut').value = `  '${encode(c)}',`; };
+  $('mkCopy').onclick = async () => { const t = $('mkOut').value; if (!t) return; try { await navigator.clipboard.writeText(t); } catch (e) { $('mkOut').select(); document.execCommand('copy'); } toast('Line copied'); };
+  $('mkTest').onclick = () => { const c = read(); if (c) window.open(location.pathname + '?test=' + encodeURIComponent(encode(c)), '_blank'); };
+  $('mkLoad').onchange = e => {
+    if (e.target.value === '') return;
+    const c = decode(PUZZLES[+e.target.value]);
+    $('mT').value = c.t; $('mS').value = c.s; $('mD').value = c.d || 1; $('mA').value = c.a;
+    c.e.forEach((t, i) => $('mE' + i).value = t); c.h.forEach((t, i) => $('mH' + i).value = t);
+    c.p.forEach((p, i) => { $('mN' + i).value = p[0]; $('mR' + i).value = p[1]; $('mQ' + i).value = p[2]; });
+    document.querySelectorAll('input[name="mX"]').forEach(r => r.checked = +r.value === c.x);
+    $('mkOut').value = ''; note(`Loaded No. ${+e.target.value + 1}. Change anything, then make a new line to replace the old one.`);
+  };
+}
+
+/* ================= Start ================= */
+function openM(id) { $(id).classList.add('open'); const c = $(id).querySelector('[data-close]'); c && c.focus({preventScroll: true}); }
+const modalOpen = () => !!document.querySelector('.modal.open');
+function init() {
+  paintSound();
+  $('helpBtn').onclick = () => openM('helpModal');
+  $('statsBtn').onclick = () => { renderStats(); tick(); openM('statsModal'); };
+  $('soundBtn').onclick = () => { soundOn = !soundOn; store.set('porkies-sound', soundOn); paintSound(); if (soundOn) { sfx.pick(2); musicPlay(); } else musicStop(300); };
+  // browsers only allow music to start after a tap, so the first tap anywhere starts it
+  ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => musicPlay(), true));
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => {
+    if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('open');
+  }));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); });
+  if (!C) { document.querySelectorAll('.label,.evidence,.note,.suspects,.act').forEach(el => el.hidden = true);
+    $('caseTitle').textContent = 'Case file missing'; $('scene').textContent = "Today's case didn't load. Check the PUZZLES list in index.html."; return; }
+  $('suspects').addEventListener('click', e => { const t = e.target.closest('.sus'); if (t && !t.disabled) pick(+t.dataset.p); });
+  $('voteBtn').onclick = vote;
+  $('hintBtn').onclick = useHint;
+  if (done()) record();
+  render();
+  if (!TEST && !store.get('porkies-seen', false)) { openM('helpModal'); store.set('porkies-seen', true); }
+  // the clock only runs while the case is open, on screen, and nothing is covering it
+  setInterval(() => {
+    tick();
+    if (done() || document.hidden || modalOpen()) return;
+    S.secs = Math.min(S.secs + 1, 5999); paintClock();
+    if (S.secs % 5 === 0) save();
+  }, 1000);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { if (music) music.pause(); } else if (music && !done()) musicPlay(); save(); if (!TEST && !document.hidden && dayNumber() !== DAY) location.reload(); });
+}
+
+if (params.has('og')) {
+  document.body.innerHTML = '<div class="og"><p class="kicker" style="margin-bottom:12px">og-image, 1200×630</p><div id="ogc"></div><button class="btn" id="ogdl" style="margin-top:16px">Download og-image.png</button></div>';
+  drawOG().then(cv => {
+    $('ogc').appendChild(cv);
+    $('ogdl').onclick = () => cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'og-image.png'; a.click(); }, 'image/png');
+  });
+} else if (params.has('make')) {
+  maker();
+} else {
+  init();
+}
+</script>
+</body>
+</html>
